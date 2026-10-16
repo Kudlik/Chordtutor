@@ -32,6 +32,7 @@ Vite, React 19, TypeScript, vite-plugin-pwa, Vitest. No backend. Voicing data is
 | `src/i18n/` | English and Polish text; a missing Polish key fails the build |
 | `src/analytics.ts` | Consent-gated GA4 |
 | `features/` | The MVP backlog as Gherkin user stories (`@US-xxx`) |
+| `BUGS.md` | Known bugs and the report template |
 | `docs/` | Design mockups and the "A Music Theory" content sheet |
 
 ## Development
