@@ -10,7 +10,7 @@ Each `.feature` file is one epic. Each `@US-xxx` tag is one user story. Every sc
 | 04-chord-selection | Roots, variants, spelling choice |
 | 05-chord-construction-display | Note and degree on every dot, colours, legend |
 | 06-voicings | Voicings per instrument, transposition, data quality |
-| 07-triad-view | "Triad only" toggle (dropped) |
+| 07 | (removed: Triad only) |
 | 08-chord-explanation | Written explanation per chord type |
 | 09-analytics-consent | GA4 behind a consent modal |
 | 10-accessibility-quality | Accessibility, performance, theory tests |
@@ -32,10 +32,13 @@ Each `.feature` file is one epic. Each `@US-xxx` tag is one user story. Every sc
 | m7 | 3, 7, 10 | 1 b3 5 b7 |
 | 7sus4 | 5, 7, 10 | 1 4 5 b7 |
 
-12 roots x 12 types = 144 chords. Chord types are shown as a single "Variant" list, with no Triads/Other grouping. The "Triad only" toggle was removed after the MVP build (07-triad-view is no longer in scope).
+12 roots x 12 types = 144 chords. Chord types are shown as a single "Variant" list, with no Triads/Other grouping.
 
 ## Decisions taken
 
+- The "Triad only" toggle was dropped after the MVP build (the former epic 07, US-703 to US-708, is removed). The fretboard and legend always show every note of the chord.
+- The theme can be set to System, Light or Dark in the settings (US-1008, US-1012, US-1013).
+- The settings show links to the author's Spotify and LinkedIn pages (US-108).
 - Chord types sit in one "Variant" list. The earlier Triads / Other chords grouping is dropped (US-701 and US-702 removed; US-405 rewritten).
 - Note names are spelled correctly for the chosen root. Double accidentals are shown as the plain enharmonic note, with a tooltip.
 - Each dot shows the note (large) and the degree (small), with a colour per degree. Colour is never the only cue.

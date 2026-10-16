@@ -54,3 +54,9 @@ Feature: App shell, access and platforms
   Scenario: The footer links to the privacy settings
     When I scroll to the bottom of any page
     Then I see a link that reopens the analytics consent settings
+
+  @US-108
+  Scenario: The settings show the author's social links
+    When I open the settings
+    Then below the author credit I see links to "Spotify" and "LinkedIn"
+    And each link opens the author's page in a new tab

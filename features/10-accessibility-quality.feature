@@ -24,7 +24,7 @@ Feature: Accessibility and quality
   @US-1004
   Scenario: The app can be used with the keyboard only
     When I press Tab repeatedly
-    Then focus moves through settings, roots, types, voicings and toggles in a logical order
+    Then focus moves through settings, roots, types, and voicings in a logical order
     And the focused element is clearly visible
     And Enter or Space activates it
 
@@ -45,10 +45,30 @@ Feature: Accessibility and quality
     Then no content is cut off or overlapping
 
   @US-1008
-  Scenario: Dark mode follows the system setting
-    Given my system uses a dark theme
+  Scenario: The theme follows the system setting by default
+    Given I have never chosen a theme
+    And my system uses a dark theme
     When I open the app
     Then the app is shown in a dark theme
+
+  @US-1012
+  Scenario Outline: Choosing a theme in the settings
+    Given I open the settings
+    When I choose the theme "<theme>"
+    Then the app is shown in <result> immediately
+    And the options are "System", "Light" and "Dark"
+
+    Examples:
+      | theme  | result                       |
+      | Light  | the light theme              |
+      | Dark   | the dark theme               |
+      | System | the theme of my system       |
+
+  @US-1013
+  Scenario: The chosen theme is remembered
+    Given I chose the theme "Dark" while my system uses a light theme
+    When I return to the app later on the same device
+    Then the app is shown in the dark theme
 
   @US-1009
   Scenario: The app loads quickly on mobile
