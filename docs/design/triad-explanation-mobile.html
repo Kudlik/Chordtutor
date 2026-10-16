@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Triad only and explanation</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap">
+<style>
+body{margin:0}
+button{font-family:inherit;cursor:pointer}
+a{color:#673d00}a:hover{color:#2b1700}
+</style>
+</helmet>
+<div style="width:390px;height:1070px;box-sizing:border-box;background:#fff8f4;color:#211a14;font-family:Roboto,system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden">
+
+<div style="height:64px;flex:none;display:flex;align-items:center;padding:0 16px">
+<h1 style="margin:0;font-size:22px;line-height:28px;font-weight:400">ChordTutor</h1>
+</div>
+
+<nav aria-label="Main" style="flex:none;display:flex;border-bottom:1px solid #d4c4b5;padding:0 16px;margin-bottom:16px"><a href="Main.dc.html" aria-current="page" style="display:flex;align-items:center;height:48px;padding:0 4px;font-size:14px;font-weight:500;letter-spacing:0.1px;color:#673d00;text-decoration:none;border-bottom:3px solid #845416;margin-bottom:-1px">Chord Explorer</a></nav>
+
+<div style="padding:0 16px;display:flex;flex-direction:column;gap:20px">
+
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<button type="button" style="min-height:44px;padding:0 16px;border:1px solid #827568;border-radius:8px;background:transparent;color:#211a14;font-size:14px;font-weight:500">Guitar</button>
+<button type="button" style="min-height:44px;padding:0 16px;border:1px solid #827568;border-radius:8px;background:transparent;color:#211a14;font-size:14px;font-weight:500">Root: C</button>
+<button type="button" style="min-height:44px;padding:0 16px;border:1px solid #827568;border-radius:8px;background:transparent;color:#211a14;font-size:14px;font-weight:500">Variant: 7</button>
+</div>
+
+<div style="background:#fff1e6;border-radius:28px;padding:20px 16px 16px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:flex-end;justify-content:space-between;padding:0 4px">
+<div>
+<h2 style="margin:0;font-size:36px;line-height:44px;font-weight:400">C 7</h2>
+<div style="font-size:16px;line-height:24px;letter-spacing:0.5px;color:#50453a">C &#8211; E &#8211; G &#8211; Bb</div>
+</div>
+<div style="display:flex;align-items:center;gap:8px;min-height:44px">
+<span id="triad-label" style="font-size:14px;font-weight:500;letter-spacing:0.1px">Triad only</span>
+<button type="button" role="switch" aria-checked="true" aria-labelledby="triad-label" style="width:52px;height:32px;border:0;border-radius:16px;background:#845416;position:relative;padding:0"><span style="position:absolute;right:4px;top:4px;width:24px;height:24px;border-radius:12px;background:#ffffff"></span></button>
+</div>
+</div>
+
+<div style="background:#fff8f4;border-radius:16px;padding:12px 16px;display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;align-items:center;gap:12px;font-size:14px;line-height:20px;letter-spacing:0.25px">
+<svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="13" fill="none" stroke="#845416" stroke-width="2"/><circle cx="14" cy="14" r="9" fill="#845416"/></svg>
+<span><b style="font-weight:500">1</b> Root: C</span></div>
+<div style="display:flex;align-items:center;gap:12px;font-size:14px;line-height:20px;letter-spacing:0.25px">
+<svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="9" fill="#56633b"/></svg>
+<span><b style="font-weight:500">3</b> Major third: E</span></div>
+<div style="display:flex;align-items:center;gap:12px;font-size:14px;line-height:20px;letter-spacing:0.25px">
+<svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="9" fill="#e0c1a3" stroke="#827568" stroke-width="1.5"/></svg>
+<span><b style="font-weight:500">5</b> Perfect fifth: G</span></div>
+<div style="display:flex;align-items:center;gap:12px;font-size:14px;line-height:20px;letter-spacing:0.25px;color:#50453a">
+<svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="9" fill="none" stroke="#827568" stroke-width="1.5" stroke-dasharray="3 3"/></svg>
+<span><b style="font-weight:500">b7</b> Minor seventh: Bb <i style="font-style:normal">(hidden by Triad only)</i></span></div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:20px;padding:0 4px">
+<h2 style="margin:0;font-size:24px;line-height:32px;font-weight:400">7 chord</h2>
+
+<div style="background:#d9e9b6;color:#3f4b26;border-radius:16px;padding:12px 16px;font-size:14px;line-height:20px;letter-spacing:0.25px">The triad of this chord is <a href="#major" style="color:#3f4b26;font-weight:500">C Major</a>. Turn off Triad only to see the extra note.</div>
+
+<section style="display:flex;flex-direction:column;gap:4px">
+<h3 style="margin:0;font-size:16px;line-height:24px;font-weight:500;letter-spacing:0.15px">What it is</h3>
+<p style="margin:0;font-size:16px;line-height:24px;letter-spacing:0.5px;color:#211a14">A major chord with one extra note on top: the flattened seventh. It is often called the dominant seventh.</p>
+</section>
+
+<section style="display:flex;flex-direction:column;gap:4px">
+<h3 style="margin:0;font-size:16px;line-height:24px;font-weight:500;letter-spacing:0.15px">How it sounds</h3>
+<p style="margin:0;font-size:16px;line-height:24px;letter-spacing:0.5px;color:#211a14">Tense and a little bluesy. It wants to move on, most often to the chord a fifth below it.</p>
+</section>
+
+<section style="display:flex;flex-direction:column;gap:8px">
+<h3 style="margin:0;font-size:16px;line-height:24px;font-weight:500;letter-spacing:0.15px">How it is built</h3>
+<table style="border-collapse:collapse;width:100%;font-size:14px;line-height:20px;letter-spacing:0.25px">
+<tbody>
+<tr style="border-bottom:1px solid #d4c4b5"><th scope="row" style="text-align:left;font-weight:500;padding:10px 0;width:40%">Steps from root</th><td style="padding:10px 0">4, 7, 10</td></tr>
+<tr style="border-bottom:1px solid #d4c4b5"><th scope="row" style="text-align:left;font-weight:500;padding:10px 0">Degrees</th><td style="padding:10px 0">1, 3, 5, b7</td></tr>
+<tr><th scope="row" style="text-align:left;font-weight:500;padding:10px 0">Example in C</th><td style="padding:10px 0">C, E, G, Bb</td></tr>
+</tbody>
+</table>
+<p style="margin:0;font-size:14px;line-height:20px;letter-spacing:0.25px;color:#50453a">Each step is one <button type="button" style="border:0;background:transparent;padding:0;min-height:24px;font-size:14px;line-height:20px;letter-spacing:0.25px;color:#673d00;text-decoration:underline dotted;text-underline-offset:3px">semitone</button>, the distance of one fret.</p>
+</section>
+
+<a href="#major" style="display:flex;align-items:center;gap:8px;min-height:44px;font-size:14px;font-weight:500;letter-spacing:0.1px">Compare with Major</a>
+</div>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1070}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

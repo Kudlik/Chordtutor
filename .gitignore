@@ -1,0 +1,13 @@
+node_modules
+dist
+.DS_Store
+.vercel
+.env*
+!.env.example
+# Original loose design/content files kept locally; tracked copies live in docs/ and src/data/
+/chord_voicings.md
+/a music theory.pdf
+/explorer-*.html
+/settings-*.html
+/triad-explanation-mobile.html
+.claude

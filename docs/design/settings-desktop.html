@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Settings desktop</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap">
+<style>
+body{margin:0}
+button{font-family:inherit;cursor:pointer}
+a{color:#673d00}a:hover{color:#2b1700}
+</style>
+</helmet>
+<div style="min-height:760px;box-sizing:border-box;background:#fff8f4;color:#211a14;font-family:Roboto,system-ui,sans-serif;display:flex;flex-direction:column">
+
+<header style="display:flex;align-items:center;gap:32px;height:64px;padding:0 32px;border-bottom:1px solid #d4c4b5;flex:none">
+<h1 style="margin:0;font-size:22px;line-height:28px;font-weight:400">ChordTutor</h1>
+<nav aria-label="Main" style="display:flex;align-self:stretch;flex:1">
+<a href="Desktop.dc.html" style="display:flex;align-items:center;padding:0 16px;font-size:14px;font-weight:500;letter-spacing:0.1px;color:#50453a;text-decoration:none">Chord Explorer</a>
+</nav>
+<a href="#settings" aria-label="Settings" aria-current="page" style="width:48px;height:48px;border-radius:24px;background:#ffddbb;display:flex;align-items:center;justify-content:center">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#673d00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+</a>
+</header>
+
+<main style="flex:1;width:100%;max-width:720px;box-sizing:border-box;margin:0 auto;padding:40px 32px 24px;display:flex;flex-direction:column;gap:32px">
+
+<h2 style="margin:0;font-size:32px;line-height:40px;font-weight:400">Settings</h2>
+
+<section style="background:#fff1e6;border-radius:28px;padding:24px;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:56px">
+<div style="display:flex;flex-direction:column">
+<span id="lh-label" style="font-size:16px;line-height:24px;font-weight:500;letter-spacing:0.15px">Left-handed mode</span>
+<span style="font-size:14px;line-height:20px;letter-spacing:0.25px;color:#50453a">Mirrors the fretboard. The nut moves to the right.</span>
+</div>
+<button type="button" role="switch" aria-checked="false" aria-labelledby="lh-label" style="flex:none;width:52px;height:32px;border:2px solid #827568;border-radius:16px;background:#eee0d5;position:relative;padding:0"><span style="position:absolute;left:6px;top:6px;width:16px;height:16px;border-radius:8px;background:#827568"></span></button>
+</div>
+<div style="display:flex;gap:16px;flex-wrap:wrap">
+<figure style="margin:0;flex:1 1 240px;background:#fff8f4;border-radius:16px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:8px">
+<svg width="200" height="64" viewBox="0 0 200 64" role="img" aria-label="Right-handed: nut on the left" style="display:block"><rect x="4" y="6" width="192" height="52" fill="#fff1e6"/><line x1="4" y1="6" x2="4" y2="58" stroke="#50453a" stroke-width="5"/><g stroke="#d4c4b5" stroke-width="1.5"><line x1="52" y1="6" x2="52" y2="58"/><line x1="100" y1="6" x2="100" y2="58"/><line x1="148" y1="6" x2="148" y2="58"/><line x1="196" y1="6" x2="196" y2="58"/></g><g stroke="#827568"><line x1="4" y1="14" x2="196" y2="14"/><line x1="4" y1="24" x2="196" y2="24"/><line x1="4" y1="34" x2="196" y2="34"/><line x1="4" y1="44" x2="196" y2="44"/><line x1="4" y1="54" x2="196" y2="54"/></g></svg>
+<figcaption style="font-size:12px;line-height:16px;letter-spacing:0.4px;color:#50453a">Right-handed</figcaption>
+</figure>
+<figure style="margin:0;flex:1 1 240px;background:#fff8f4;border-radius:16px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:8px">
+<svg width="200" height="64" viewBox="0 0 200 64" role="img" aria-label="Left-handed: nut on the right" style="display:block"><rect x="4" y="6" width="192" height="52" fill="#fff1e6"/><line x1="196" y1="6" x2="196" y2="58" stroke="#50453a" stroke-width="5"/><g stroke="#d4c4b5" stroke-width="1.5"><line x1="148" y1="6" x2="148" y2="58"/><line x1="100" y1="6" x2="100" y2="58"/><line x1="52" y1="6" x2="52" y2="58"/><line x1="4" y1="6" x2="4" y2="58"/></g><g stroke="#827568"><line x1="4" y1="14" x2="196" y2="14"/><line x1="4" y1="24" x2="196" y2="24"/><line x1="4" y1="34" x2="196" y2="34"/><line x1="4" y1="44" x2="196" y2="44"/><line x1="4" y1="54" x2="196" y2="54"/></g></svg>
+<figcaption style="font-size:12px;line-height:16px;letter-spacing:0.4px;color:#50453a">Left-handed</figcaption>
+</figure>
+</div>
+</section>
+
+<section style="background:#fff1e6;border-radius:28px;padding:24px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap">
+<h3 style="margin:0;font-size:16px;line-height:24px;font-weight:500;letter-spacing:0.15px">Language</h3>
+<div style="display:flex;border:1px solid #827568;border-radius:22px;overflow:hidden;height:44px;width:280px" role="group" aria-label="Language">
+<button type="button" aria-pressed="true" style="flex:1;border:0;background:#feddbd;color:#58432c;font-size:14px;font-weight:500;letter-spacing:0.1px;display:flex;align-items:center;justify-content:center;gap:6px">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#58432c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12l5 5L20 6"/></svg>English</button>
+<button type="button" aria-pressed="false" style="flex:1;border:0;border-left:1px solid #827568;background:transparent;color:#211a14;font-size:14px;font-weight:500;letter-spacing:0.1px">Polski</button>
+</div>
+</section>
+
+<section style="background:#fff1e6;border-radius:28px;padding:8px 24px">
+<a href="#consent" style="display:flex;align-items:center;justify-content:space-between;min-height:56px;color:#211a14;font-size:16px;letter-spacing:0.5px;text-decoration:none">
+<span>Analytics preferences</span>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#50453a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+</a>
+</section>
+
+<section style="display:flex;flex-direction:column;gap:4px;padding:0 8px">
+<p style="margin:0;font-size:14px;line-height:20px;letter-spacing:0.25px;color:#50453a">Created by Maciek Jaskulski</p>
+<div style="display:flex;gap:24px">
+<a href="https://www.instagram.com/last_page_doodle/" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;min-height:44px;font-size:14px;font-weight:500;letter-spacing:0.1px">Instagram</a>
+<a href="https://open.spotify.com/artist/0PDkjNbQApHnU8wLwpKKv6?si=GRyMhPhkSkGc1rtHfKigyg" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;min-height:44px;font-size:14px;font-weight:500;letter-spacing:0.1px">Spotify</a>
+</div>
+</section>
+
+</main>
+
+<footer style="flex:none;display:flex;justify-content:center;padding:0 32px 24px">
+<a href="#consent" style="display:flex;align-items:center;min-height:44px;font-size:12px;letter-spacing:0.4px">Privacy settings</a>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":900}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>
