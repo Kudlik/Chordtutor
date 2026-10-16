@@ -1,5 +1,6 @@
 import { LANGS, type Lang, type TFunction } from '../i18n';
 import { Dialog } from './Dialog';
+import type { Theme } from '../settings';
 import { Segmented } from './Segmented';
 
 interface Props {
@@ -7,13 +8,15 @@ interface Props {
   t: TFunction;
   left: boolean;
   lang: Lang;
+  theme: Theme;
+  onTheme: (theme: Theme) => void;
   onLeft: (left: boolean) => void;
   onLang: (lang: Lang) => void;
   onAnalytics: () => void;
   onClose: () => void;
 }
 
-export function SettingsDialog({ open, t, left, lang, onLeft, onLang, onAnalytics, onClose }: Props) {
+export function SettingsDialog({ open, t, left, lang, theme, onTheme, onLeft, onLang, onAnalytics, onClose }: Props) {
   return (
     <Dialog open={open} title={t('settings.title')} onClose={onClose}>
       <div className="setting">
@@ -26,6 +29,19 @@ export function SettingsDialog({ open, t, left, lang, onLeft, onLang, onAnalytic
           options={[
             { id: 'right', label: t('settings.right') },
             { id: 'left', label: t('settings.left') },
+          ]}
+        />
+      </div>
+      <div className="setting">
+        <h3>{t('settings.theme')}</h3>
+        <Segmented<Theme>
+          label={t('settings.theme')}
+          value={theme}
+          onChange={onTheme}
+          options={[
+            { id: 'system', label: t('settings.themeSystem') },
+            { id: 'light', label: t('settings.themeLight') },
+            { id: 'dark', label: t('settings.themeDark') },
           ]}
         />
       </div>

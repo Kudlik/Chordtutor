@@ -208,6 +208,8 @@ export function App() {
         t={t}
         left={state.left}
         lang={state.lang}
+        theme={state.theme}
+        onTheme={(theme) => update({ theme })}
         onLeft={(left) => update({ left })}
         onLang={(lang) => update({ lang })}
         onAnalytics={() => { setSettingsOpen(false); setFirstVisit(false); setConsentOpen(true); }}

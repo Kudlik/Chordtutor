@@ -12,7 +12,10 @@ export interface AppState {
   triad: boolean;
   left: boolean;
   lang: Lang;
+  theme: Theme;
 }
+
+export type Theme = 'system' | 'light' | 'dark';
 
 function fromUrl(): Partial<AppState> {
   const p = new URLSearchParams(window.location.search);
@@ -37,6 +40,7 @@ function initial(): AppState {
     voicing: 0,
     triad: false,
     left: readStore('ct.left') === '1',
+    theme: ((t) => (t === 'light' || t === 'dark' ? t : 'system'))(readStore('ct.theme')),
     lang: storedLang === 'pl' || storedLang === 'en' ? storedLang : detectLang(navigator.languages?.length ? navigator.languages : [navigator.language ?? 'en']),
   };
 }
@@ -49,6 +53,7 @@ export function useAppState() {
       const next = { ...s, ...patch };
       if ('instrument' in patch) writeStore('ct.instrument', next.instrument);
       if ('left' in patch) writeStore('ct.left', next.left ? '1' : '0');
+      if ('theme' in patch) writeStore('ct.theme', next.theme);
       if ('lang' in patch) writeStore('ct.lang', next.lang);
       return next;
     });
@@ -67,6 +72,12 @@ export function useAppState() {
   useEffect(() => {
     document.documentElement.lang = state.lang;
   }, [state.lang]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (state.theme === 'system') root.removeAttribute('data-theme');
+    else root.setAttribute('data-theme', state.theme);
+  }, [state.theme]);
 
   return useMemo(() => [state, update] as const, [state, update]);
 }

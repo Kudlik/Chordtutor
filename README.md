@@ -13,7 +13,7 @@ It is made for beginners and self-taught musicians who play guitar, bass or ukul
 - **Triad only** toggle to reduce any chord to root, third and fifth.
 - **Written explanation** per chord type: what it is, how it sounds, how it is built (steps, degrees, worked example), related chords and a small glossary.
 - **Polish and English** interface, following the browser language. The note B is always "B".
-- **Installable PWA**, works offline after the first visit, responsive (the fretboard turns vertical on phones), dark mode follows the system.
+- **Installable PWA**, works offline after the first visit, responsive (the fretboard turns vertical on phones), theme setting (System, Light or Dark; System follows the OS).
 - **Shareable URLs**: the chord and instrument are in the address (`?root=G&type=7&inst=ukulele`).
 - **Privacy first**: Google Analytics 4 loads only after the visitor accepts a consent modal; the choice can be changed from the footer at any time.
 
