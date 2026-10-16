@@ -1,18 +1,17 @@
 import { useState } from 'react';
 import type { TFunction } from '../i18n';
-import { CHORD_FORMULAS, RELATED, TRIAD_OF, chordNotes, stepsOf, type ChordType, type RootName } from '../theory';
+import { CHORD_FORMULAS, RELATED, chordNotes, stepsOf, type ChordType, type RootName } from '../theory';
 
 interface Props {
   root: RootName;
   type: ChordType;
-  triad: boolean;
   t: TFunction;
   onSelectType: (type: ChordType) => void;
 }
 
 type Term = 'semitone' | 'degree';
 
-export function Explanation({ root, type, triad, t, onSelectType }: Props) {
+export function Explanation({ root, type, t, onSelectType }: Props) {
   const [open, setOpen] = useState<Term | null>(null);
   const notes = chordNotes(root, type).map((n) => n.name).join(', ');
   const toggle = (term: Term) => setOpen((o) => (o === term ? null : term));
@@ -33,9 +32,6 @@ export function Explanation({ root, type, triad, t, onSelectType }: Props) {
     );
   };
 
-  const triadType = TRIAD_OF[type];
-  const triadName = triadType ? `${root} ${t(`type.${triadType}` as 'type.Major')}` : '';
-
   return (
     <div className="explanation">
       <section>
@@ -50,7 +46,6 @@ export function Explanation({ root, type, triad, t, onSelectType }: Props) {
             </button>
           ))}
         </p>
-        {triad && triadType && <p className="triad-note">{t('triad.explain', { chord: triadName })}</p>}
       </section>
       <section>
         <h3>{t('exp.sound')}</h3>

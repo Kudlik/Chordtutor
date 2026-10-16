@@ -1,15 +1,13 @@
 import { DEGREE_COLORS } from '../degreeColors';
 import { MAX_FRET, TUNINGS, type Instrument } from '../instruments';
 import type { TFunction } from '../i18n';
-import type { DegreeId, SpelledNote } from '../theory';
+import type { SpelledNote } from '../theory';
 import type { Voicing } from '../voicings';
 
 interface Props {
   instrument: Instrument;
   voicing: Voicing | undefined;
   notes: SpelledNote[];
-  /** Degrees to show (all of them, or only the triad). */
-  visible: DegreeId[];
   left: boolean;
   vertical: boolean;
   chordName: string;
@@ -59,17 +57,16 @@ function geometry(n: number, vertical: boolean, left: boolean): Geo {
   };
 }
 
-export function Fretboard({ instrument, voicing, notes, visible, left, vertical, chordName, voicingNumber, t }: Props) {
+export function Fretboard({ instrument, voicing, notes, left, vertical, chordName, voicingNumber, t }: Props) {
   const tuning = TUNINGS[instrument];
   const n = tuning.length;
   const g = geometry(n, vertical, left);
   const byPc = new Map(notes.map((note) => [note.pc, note]));
-  const shown = new Set(visible);
   const isBass = instrument === 'bass';
 
   const dots = (voicing?.dots ?? []).flatMap((d) => {
     const note = byPc.get((tuning[d.string].pc + d.fret) % 12);
-    return note && shown.has(note.degree) ? [{ ...d, note }] : [];
+    return note ? [{ ...d, note }] : [];
   });
   const played = new Set(dots.map((d) => d.string));
   const mutedStrings = isBass ? [] : tuning.map((_, i) => i).filter((i) => !played.has(i));

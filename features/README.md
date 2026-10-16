@@ -10,7 +10,7 @@ Each `.feature` file is one epic. Each `@US-xxx` tag is one user story. Every sc
 | 04-chord-selection | Roots, variants, spelling choice |
 | 05-chord-construction-display | Note and degree on every dot, colours, legend |
 | 06-voicings | Voicings per instrument, transposition, data quality |
-| 07-triad-view | "Triad only" toggle |
+| 07-triad-view | "Triad only" toggle (dropped) |
 | 08-chord-explanation | Written explanation per chord type |
 | 09-analytics-consent | GA4 behind a consent modal |
 | 10-accessibility-quality | Accessibility, performance, theory tests |
@@ -32,7 +32,7 @@ Each `.feature` file is one epic. Each `@US-xxx` tag is one user story. Every sc
 | m7 | 3, 7, 10 | 1 b3 5 b7 |
 | 7sus4 | 5, 7, 10 | 1 4 5 b7 |
 
-12 roots x 12 types = 144 chords. Chord types are shown as a single "Variant" list, with no Triads/Other grouping. The "Triad only" toggle stays.
+12 roots x 12 types = 144 chords. Chord types are shown as a single "Variant" list, with no Triads/Other grouping. The "Triad only" toggle was removed after the MVP build (07-triad-view is no longer in scope).
 
 ## Decisions taken
 

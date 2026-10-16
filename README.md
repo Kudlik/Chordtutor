@@ -10,7 +10,6 @@ It is made for beginners and self-taught musicians who play guitar, bass or ukul
 - **Three instruments**: guitar (6 strings), bass (4) and ukulele (4, re-entrant high G), standard tuning only, frets 0 to 15, left-handed mode.
 - **Notes and degrees on every dot**: note name large, degree small, one fixed colour per degree, root marked with a ring. Colour is never the only cue. Spelling follows the chosen root (C# Major = C#, E#, G#; Db Major = Db, F, Ab).
 - **Voicings**: up to three hand-curated, programmatically verified voicings per chord for guitar and ukulele (open shapes first, then movable shapes); bass positions are generated from the chord formula.
-- **Triad only** toggle to reduce any chord to root, third and fifth.
 - **Written explanation** per chord type: what it is, how it sounds, how it is built (steps, degrees, worked example), related chords and a small glossary.
 - **Polish and English** interface, following the browser language. The note B is always "B".
 - **Installable PWA**, works offline after the first visit, responsive (the fretboard turns vertical on phones), theme setting (System, Light or Dark; System follows the OS).

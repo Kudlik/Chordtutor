@@ -10,7 +10,7 @@ import { makeT } from './i18n';
 import { INSTRUMENTS, type Instrument } from './instruments';
 import { useAppState } from './settings';
 import {
-  CHORD_FORMULAS, CHORD_TYPES, ROOT_BUTTONS, chordNotes, hasTriadToggle, rootPitchClass, triadDegrees,
+  CHORD_TYPES, ROOT_BUTTONS, chordNotes, rootPitchClass,
   type ChordType, type RootName,
 } from './theory';
 import { voicingsFor } from './voicings';
@@ -44,14 +44,11 @@ export function App() {
   const [firstVisit, setFirstVisit] = useState(() => getConsent() === null);
 
   const { instrument, root, type } = state;
-  const triadOn = state.triad && hasTriadToggle(type);
   const notes = useMemo(() => chordNotes(root, type), [root, type]);
   const voicings = useMemo(() => voicingsFor(instrument, root, type), [instrument, root, type]);
   const voicingIndex = Math.min(state.voicing, Math.max(0, voicings.length - 1));
-  const visible = triadOn ? triadDegrees(type) : CHORD_FORMULAS[type];
   const typeLabel = t(`type.${type}` as 'type.Major');
   const title = `${root} ${typeLabel}`;
-  const shownNotes = notes.filter((n) => visible.includes(n.degree));
 
   const selectRoot = (pc: number, names: RootName[]) => {
     if (rootPitchClass(root) !== pc) update({ root: names[0] });
@@ -127,35 +124,14 @@ export function App() {
             <div className="card-head">
               <div>
                 <h2>{title}</h2>
-                <div className="notes-line">{shownNotes.map((n) => n.name).join(' – ')}</div>
+                <div className="notes-line">{notes.map((n) => n.name).join(' – ')}</div>
               </div>
-              <div className="triad-toggle">
-                <span id="triad-label">{t('triad.label')}</span>
-                <button
-                  type="button"
-                  role="switch"
-                  className="switch"
-                  aria-checked={triadOn}
-                  aria-labelledby="triad-label"
-                  aria-describedby={hasTriadToggle(type) ? undefined : 'triad-hint'}
-                  disabled={!hasTriadToggle(type)}
-                  onClick={() => update({ triad: !state.triad })}
-                >
-                  <span className="knob" />
-                </button>
-              </div>
-              {!hasTriadToggle(type) && (
-                <p id="triad-hint" className="muted triad-hint">
-                  {t('triad.disabled')}
-                </p>
-              )}
             </div>
 
             <Fretboard
               instrument={instrument}
               voicing={voicings[voicingIndex]}
               notes={notes}
-              visible={visible}
               left={state.left}
               vertical={vertical}
               chordName={title}
@@ -174,17 +150,15 @@ export function App() {
               </div>
               <ul className="legend" aria-label={t('legend.label')}>
                 {notes.map((n) => {
-                  const hidden = !visible.includes(n.degree);
                   const col = DEGREE_COLORS[n.degree];
                   return (
-                    <li key={n.degree} className={hidden ? 'hidden-degree' : undefined}>
+                    <li key={n.degree}>
                       <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
                         {n.degree === '1' && <circle cx="14" cy="14" r="13" fill="none" stroke={col.fill} strokeWidth="2" />}
                         <circle cx="14" cy="14" r="9" fill={col.fill} />
                       </svg>
                       <span>
                         <b>{n.degree}</b> {t(`degree.${n.degree}` as 'degree.1')}: {n.name}
-                        {hidden && <> {t('legend.hidden')}</>}
                       </span>
                     </li>
                   );
@@ -193,7 +167,7 @@ export function App() {
             </div>
           </div>
 
-          <Explanation root={root} type={type} triad={triadOn} t={t} onSelectType={(ct) => update({ type: ct })} />
+          <Explanation root={root} type={type} t={t} onSelectType={(ct) => update({ type: ct })} />
         </div>
       </main>
 

@@ -39,15 +39,6 @@ export const CHORD_FORMULAS: Record<ChordType, DegreeId[]> = {
   '7sus4': ['1', '4', '5', 'b7'],
 };
 
-/** Type of the triad contained in each four-note chord. */
-export const TRIAD_OF: Partial<Record<ChordType, ChordType>> = {
-  '7': 'Major',
-  maj7: 'Major',
-  m7: 'Minor',
-  dim7: 'dim',
-  '7sus4': 'sus4',
-};
-
 /** Related chord types shown as "compare with" links. */
 export const RELATED: Record<ChordType, ChordType[]> = {
   Major: ['Minor', 'maj7', '7'],
@@ -124,14 +115,6 @@ export function chordNotes(root: RootName, type: ChordType): SpelledNote[] {
 
 export function stepsOf(type: ChordType): number[] {
   return CHORD_FORMULAS[type].slice(1).map((d) => DEGREES[d].steps);
-}
-
-export function triadDegrees(type: ChordType): DegreeId[] {
-  return CHORD_FORMULAS[type].length === 4 ? CHORD_FORMULAS[type].slice(0, 3) : CHORD_FORMULAS[type];
-}
-
-export function hasTriadToggle(type: ChordType): boolean {
-  return CHORD_FORMULAS[type].length > 2;
 }
 
 export function isBlackKey(pc: number): boolean {

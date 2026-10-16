@@ -9,7 +9,6 @@ export interface AppState {
   root: RootName;
   type: ChordType;
   voicing: number;
-  triad: boolean;
   left: boolean;
   lang: Lang;
   theme: Theme;
@@ -38,7 +37,6 @@ function initial(): AppState {
     root: url.root ?? 'C',
     type: url.type ?? 'Major',
     voicing: 0,
-    triad: false,
     left: readStore('ct.left') === '1',
     theme: ((t) => (t === 'light' || t === 'dark' ? t : 'system'))(readStore('ct.theme')),
     lang: storedLang === 'pl' || storedLang === 'en' ? storedLang : detectLang(navigator.languages?.length ? navigator.languages : [navigator.language ?? 'en']),
