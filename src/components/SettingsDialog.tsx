@@ -3,6 +3,11 @@ import { Dialog } from './Dialog';
 import type { Theme } from '../settings';
 import { Segmented } from './Segmented';
 
+const SOCIALS = [
+  { label: 'Spotify', href: 'https://open.spotify.com/artist/0PDkjNbQApHnU8wLwpKKv6' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/hiimmaciek/' },
+];
+
 interface Props {
   open: boolean;
   t: TFunction;
@@ -55,6 +60,15 @@ export function SettingsDialog({ open, t, left, lang, theme, onTheme, onLeft, on
         </button>
       </div>
       <p className="muted credit">{t('settings.credit')}</p>
+      <ul className="socials">
+        {SOCIALS.map((s) => (
+          <li key={s.label}>
+            <a href={s.href} target="_blank" rel="noopener noreferrer">
+              {s.label}
+            </a>
+          </li>
+        ))}
+      </ul>
       <div className="dialog-actions">
         <button type="button" className="btn-text" onClick={onClose}>
           {t('settings.close')}
