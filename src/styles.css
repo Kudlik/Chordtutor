@@ -149,3 +149,6 @@ footer { display: flex; justify-content: center; padding: 0 32px 24px; }
   .card-head h2 { font-size: 32px; line-height: 40px; }
   .explanation { padding: 0; }
 }
+
+.fretboard [data-dot]:focus-visible circle:nth-of-type(1) { stroke: var(--primary); stroke-width: 3; }
+.fretboard { touch-action: manipulation; }

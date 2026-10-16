@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { DEGREE_COLORS } from '../degreeColors';
 import { MAX_FRET, TUNINGS, type Instrument } from '../instruments';
 import type { TFunction } from '../i18n';
@@ -63,6 +64,22 @@ export function Fretboard({ instrument, voicing, notes, left, vertical, chordNam
   const g = geometry(n, vertical, left);
   const byPc = new Map(notes.map((note) => [note.pc, note]));
   const isBass = instrument === 'bass';
+  const svgRef = useRef<SVGSVGElement>(null);
+  const [hover, setHover] = useState<number | null>(null);
+  const [pinned, setPinned] = useState<number | null>(null);
+
+  // Close the tooltip when the chord or voicing changes, and when tapping outside a dot.
+  useEffect(() => {
+    setHover(null);
+    setPinned(null);
+  }, [voicing, notes]);
+  useEffect(() => {
+    const close = (e: PointerEvent) => {
+      if (!(e.target as Element | null)?.closest?.('[data-dot]')) setPinned(null);
+    };
+    document.addEventListener('pointerdown', close);
+    return () => document.removeEventListener('pointerdown', close);
+  }, []);
 
   const dots = (voicing?.dots ?? []).flatMap((d) => {
     const note = byPc.get((tuning[d.string].pc + d.fret) % 12);
@@ -106,7 +123,7 @@ export function Fretboard({ instrument, voicing, notes, left, vertical, chordNam
   const stringEnd = (s: number) => ({ a: g.P(s, 0), b: g.P(s, MAX_FRET) });
 
   return (
-    <svg viewBox={`0 0 ${g.w} ${g.h}`} role="img" aria-label={description()} className={`fretboard${vertical ? ' vertical' : ''}`} style={{ width: '100%', maxWidth: g.w, height: 'auto', display: 'block', margin: '0 auto' }}>
+    <svg ref={svgRef} viewBox={`0 0 ${g.w} ${g.h}`} role="img" aria-label={description()} className={`fretboard${vertical ? ' vertical' : ''}`} style={{ width: '100%', maxWidth: g.w, height: 'auto', display: 'block', margin: '0 auto' }}>
       <g fontFamily="Roboto, system-ui, sans-serif" textAnchor="middle">
         <rect {...board} rx={4} fill="var(--board)" />
 
@@ -163,20 +180,70 @@ export function Fretboard({ instrument, voicing, notes, left, vertical, chordNam
           const p = g.P(d.string, open ? g.openU : d.fret - 0.5);
           const col = DEGREE_COLORS[d.note.degree];
           const r = open ? openR : dotR;
+          const degreeName = t(`degree.${d.note.degree}` as 'degree.1');
           return (
-            <g key={i}>
-              {d.note.respelled && <title>{t('board.respelled', { exact: d.note.exact })}</title>}
+            <g
+              key={i}
+              data-dot
+              tabIndex={0}
+              role="button"
+              aria-label={`${d.note.name}, ${d.note.degree}, ${degreeName}`}
+              aria-pressed={pinned === i}
+              style={{ cursor: 'pointer', outline: 'none' }}
+              onPointerEnter={(e) => e.pointerType === 'mouse' && setHover(i)}
+              onPointerLeave={(e) => e.pointerType === 'mouse' && setHover(null)}
+              onFocus={() => setHover(i)}
+              onBlur={() => setHover(null)}
+              onClick={() => setPinned((cur) => (cur === i ? null : i))}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setPinned((cur) => (cur === i ? null : i));
+                }
+                if (e.key === 'Escape') setPinned(null);
+              }}
+            >
+              <circle cx={p.x} cy={p.y} r={r + 8} fill="transparent" />
               {d.note.degree === '1' && <circle cx={p.x} cy={p.y} r={r + 5} fill="none" stroke={col.fill} strokeWidth={2} />}
               <circle cx={p.x} cy={p.y} r={r} fill={col.fill} stroke={open ? 'var(--outline)' : 'none'} strokeWidth={1.5} />
-              <text x={p.x} y={p.y + (open ? 1 : 3)} fontSize={open ? 12 : vertical ? 14 : 16} fontWeight={500} fill={col.text}>
+              <text x={p.x} y={p.y + (open ? 1 : 3)} fontSize={open ? 12 : vertical ? 14 : 16} fontWeight={500} fill={col.text} pointerEvents="none">
                 {d.note.name}
               </text>
-              <text x={p.x} y={p.y + (open ? 11 : 16)} fontSize={open ? 8 : 10} fill={col.text}>
+              <text x={p.x} y={p.y + (open ? 11 : 16)} fontSize={open ? 8 : 10} fill={col.text} pointerEvents="none">
                 {d.note.degree}
               </text>
             </g>
           );
         })}
+
+        {(() => {
+          const idx = hover ?? pinned;
+          const d = idx === null ? undefined : dots[idx];
+          if (!d) return null;
+          const open = d.fret === 0;
+          const p = g.P(d.string, open ? g.openU : d.fret - 0.5);
+          const r = (open ? openR : dotR) + 6;
+          const line1 = `${d.note.degree} · ${t(`degree.${d.note.degree}` as 'degree.1')}`;
+          const line2 = d.note.respelled ? t('board.respelled', { exact: d.note.exact }) : null;
+          const w = Math.max(line1.length, line2?.length ?? 0) * 6.6 + 20;
+          const h = line2 ? 44 : 28;
+          const x = Math.min(Math.max(p.x - w / 2, 4), g.w - w - 4);
+          const above = p.y - r - h - 4 >= 0;
+          const y = above ? p.y - r - h : p.y + r + 4;
+          return (
+            <g pointerEvents="none" role="tooltip">
+              <rect x={x} y={y} width={w} height={h} rx={8} fill="var(--ink)" />
+              <text x={x + w / 2} y={y + 18} fontSize={12} fontWeight={500} fill="var(--bg)">
+                {line1}
+              </text>
+              {line2 && (
+                <text x={x + w / 2} y={y + 35} fontSize={11} fill="var(--bg)">
+                  {line2}
+                </text>
+              )}
+            </g>
+          );
+        })()}
       </g>
     </svg>
   );

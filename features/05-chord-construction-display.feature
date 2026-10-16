@@ -53,7 +53,7 @@ Feature: Seeing how a chord is built on the fretboard
   Scenario: Double accidentals are shown as the plain enharmonic note
     When I select the chord "C" "dim7"
     Then the dot for the seventh shows the note "A" and the degree "bb7"
-    And a tooltip on the dot explains that the theoretically correct spelling is "Bbb"
+    And the tooltip of that dot also explains that the theoretically correct spelling is "Bbb"
 
   @US-505
   Scenario: Notes and degrees have distinct visual styles
@@ -106,3 +106,30 @@ Feature: Seeing how a chord is built on the fretboard
     Given left-handed mode is on
     When I select any chord
     Then no label is mirrored or upside down
+
+  @US-514
+  Scenario: Hovering a dot shows the name of its degree
+    Given I use a mouse
+    When I hover over a dot
+    Then a tooltip shows its degree and the degree name, for example "3 Major third" or "5 Perfect fifth"
+    And the tooltip disappears when the pointer leaves the dot
+
+  @US-515
+  Scenario: Tapping a dot shows and hides the tooltip on touch screens
+    Given I use a touch screen
+    When I tap a dot
+    Then the tooltip for that dot is shown
+    When I tap outside the dot
+    Then the tooltip is closed
+
+  @US-516
+  Scenario: The tooltip is available from the keyboard
+    When I focus a dot with the Tab key
+    Then the tooltip is shown
+    And pressing Enter or Space keeps it open until I press Escape
+
+  @US-517
+  Scenario: The tooltip is in the selected language
+    Given the interface is in Polish
+    When I hover over a dot for the degree "b3"
+    Then the tooltip reads "b3 · Tercja mała"
