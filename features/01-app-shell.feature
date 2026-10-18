@@ -60,3 +60,15 @@ Feature: App shell, access and platforms
     When I open the settings
     Then below the author credit I see links to "Spotify" and "LinkedIn"
     And each link opens the author's page in a new tab
+
+  @US-109
+  Scenario Outline: The content is centred and fills the width of the screen
+    Given I open the app on a <device> with a viewport width of <width> px
+    Then the controls and the chord card start and end at the same distance from the left and right edges
+    And no empty strip is left to the right of the controls
+
+    Examples:
+      | device  | width |
+      | phone   | 393   |
+      | tablet  | 768   |
+      | desktop | 1280  |
