@@ -42,7 +42,9 @@ function ScaleRow({ root, scale, chord, spelling, t, labelId }: { root: RootName
 export function ScaleStrip({ root, type, chord, spelling, t }: Props) {
   const [showOthers, setShowOthers] = useState(false);
   const main = SCALE_OF[type];
-  const others = matchingScales(type).filter((id) => id !== main);
+  // Other scales are only offered with the theoretically correct note names.
+  const canShowOthers = spelling === 'correct';
+  const others = canShowOthers ? matchingScales(type).filter((id) => id !== main) : [];
   const label = (id: ScaleId) => `${root} ${t(`scale.${id}` as 'scale.major')}`;
 
   return (
@@ -60,7 +62,7 @@ export function ScaleStrip({ root, type, chord, spelling, t }: Props) {
         </label>
       )}
 
-      {showOthers && (
+      {canShowOthers && showOthers && (
         <section aria-label={t('scale.othersHeading')} className="other-scales">
           <div className="field-label">{t('scale.othersHeading')}</div>
           {others.map((id) => (

@@ -90,6 +90,7 @@ Feature: The scale behind the chord
 
   @US-1110
   Scenario: Other matching scales are hidden by default
+    Given the note names are set to "Theoretically correct"
     When I select the chord "A" "Minor"
     Then I see a switch "Show other matching scales" below the scale
     And it is off
@@ -97,7 +98,8 @@ Feature: The scale behind the chord
 
   @US-1111
   Scenario: Turning the switch on lists every scale that holds the chord
-    Given "A" "Minor" is selected
+    Given the note names are set to "Theoretically correct"
+    And "A" "Minor" is selected
     When I turn on "Show other matching scales"
     Then below the main scale I see the scales "A Dorian", "A Phrygian", "A Harmonic minor", "A Melodic minor", "A Minor pentatonic", "A Blues" and "A Diminished (half-whole)"
     And each scale is shown with its notes, starting and ending on the root
@@ -144,3 +146,19 @@ Feature: The scale behind the chord
     Then the focus is clearly visible
     And Space turns it on or off
     And the touch target is at least 44 px high
+
+  @US-1117
+  Scenario: Other matching scales are only offered with theoretically correct note names
+    Given the note names are set to "Simplified"
+    When I select the chord "A" "Minor"
+    Then I see the main scale
+    But I do not see the switch "Show other matching scales"
+
+  @US-1118
+  Scenario: Changing the note names shows or hides the other scales
+    Given the note names are set to "Theoretically correct"
+    And "Show other matching scales" is on
+    When I change the note names to "Simplified" in the settings
+    Then the switch and the other scales disappear
+    When I change the note names back to "Theoretically correct"
+    Then the switch is shown again
