@@ -1,6 +1,7 @@
 import { LANGS, type Lang, type TFunction } from '../i18n';
 import { Dialog } from './Dialog';
 import type { Theme } from '../settings';
+import type { Spelling } from '../theory';
 import { Segmented } from './Segmented';
 
 const SOCIALS = [
@@ -13,6 +14,8 @@ interface Props {
   t: TFunction;
   left: boolean;
   lang: Lang;
+  spelling: Spelling;
+  onSpelling: (spelling: Spelling) => void;
   theme: Theme;
   onTheme: (theme: Theme) => void;
   onLeft: (left: boolean) => void;
@@ -21,7 +24,7 @@ interface Props {
   onClose: () => void;
 }
 
-export function SettingsDialog({ open, t, left, lang, theme, onTheme, onLeft, onLang, onAnalytics, onClose }: Props) {
+export function SettingsDialog({ open, t, left, lang, spelling, onSpelling, theme, onTheme, onLeft, onLang, onAnalytics, onClose }: Props) {
   return (
     <Dialog open={open} title={t('settings.title')} onClose={onClose}>
       <div className="setting">
@@ -34,6 +37,19 @@ export function SettingsDialog({ open, t, left, lang, theme, onTheme, onLeft, on
           options={[
             { id: 'right', label: t('settings.right') },
             { id: 'left', label: t('settings.left') },
+          ]}
+        />
+      </div>
+      <div className="setting">
+        <h3>{t('settings.spelling')}</h3>
+        <p className="muted">{t('settings.spellingHint')}</p>
+        <Segmented<Spelling>
+          label={t('settings.spelling')}
+          value={spelling}
+          onChange={onSpelling}
+          options={[
+            { id: 'simple', label: t('spelling.simple.title') },
+            { id: 'correct', label: t('spelling.correct.title') },
           ]}
         />
       </div>

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { INSTRUMENTS, type Instrument } from './instruments';
-import { CHORD_TYPES, ROOT_NAMES, type ChordType, type RootName } from './theory';
+import { CHORD_TYPES, ROOT_NAMES, type ChordType, type RootName, type Spelling } from './theory';
 import { detectLang, type Lang } from './i18n';
 import { readStore, writeStore } from './storage';
 
@@ -12,6 +12,8 @@ export interface AppState {
   left: boolean;
   lang: Lang;
   theme: Theme;
+  /** null until the visitor has chosen on the first visit. */
+  spelling: Spelling | null;
 }
 
 export type Theme = 'system' | 'light' | 'dark';
@@ -39,6 +41,7 @@ function initial(): AppState {
     voicing: 0,
     left: readStore('ct.left') === '1',
     theme: ((t) => (t === 'light' || t === 'dark' ? t : 'system'))(readStore('ct.theme')),
+    spelling: ((v) => (v === 'simple' || v === 'correct' ? v : null))(readStore('ct.spelling')),
     lang: storedLang === 'pl' || storedLang === 'en' ? storedLang : detectLang(navigator.languages?.length ? navigator.languages : [navigator.language ?? 'en']),
   };
 }
@@ -51,6 +54,7 @@ export function useAppState() {
       const next = { ...s, ...patch };
       if ('instrument' in patch) writeStore('ct.instrument', next.instrument);
       if ('left' in patch) writeStore('ct.left', next.left ? '1' : '0');
+      if ('spelling' in patch && next.spelling) writeStore('ct.spelling', next.spelling);
       if ('theme' in patch) writeStore('ct.theme', next.theme);
       if ('lang' in patch) writeStore('ct.lang', next.lang);
       return next;

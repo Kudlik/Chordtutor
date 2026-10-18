@@ -8,7 +8,7 @@ It is made for beginners and self-taught musicians who play guitar, bass or ukul
 
 - **Chord Explorer**: 12 roots x 12 chord types (Major, Minor, 7, 5, dim, dim7, aug, sus2, sus4, maj7, m7, 7sus4) = 144 chords.
 - **Three instruments**: guitar (6 strings), bass (4) and ukulele (4, re-entrant high G), standard tuning only, frets 0 to 15, left-handed mode.
-- **Notes and degrees on every dot**: note name large, degree small, one fixed colour per degree, root marked with a ring. Colour is never the only cue. Spelling follows the chosen root (C# Major = C#, E#, G#; Db Major = Db, F, Ab).
+- **Notes and degrees on every dot**: note name large, degree small, one fixed colour per degree, root marked with a ring. Colour is never the only cue. Spelling follows the chosen root (C# Major = C#, E#, G#; Db Major = Db, F, Ab). On the first visit a modal asks whether to use **simplified** names (plain notes, for learning the basics) or **theoretically correct** ones (including double flats and sharps such as Ebb or F##); it can be changed any time in the settings.
 - **Scale under the variants**: the scale each chord is built from (D Major shows D E F# G A B C# D), with the chord notes highlighted in the degree colours. A switch lists all other matching scales and modes (Dorian, Lydian, pentatonic, blues...).
 - **Voicings**: up to three hand-curated, programmatically verified voicings per chord for guitar and ukulele (open shapes first, then movable shapes); bass positions are generated from the chord formula.
 - **Written explanation** per chord type: what it is, how it sounds, how it is built (steps, degrees, worked example), related chords and a small glossary.
@@ -59,7 +59,7 @@ Work on feature branches, open a PR into `staging`, test the preview, then merge
 ## Decisions taken
 
 - One flat "Variant" list for chord types; no Triads / Other grouping.
-- Note names are spelled correctly for the chosen root. Double accidentals are shown as the plain enharmonic note, with the correct spelling in a tooltip.
+- Note names are spelled correctly for the chosen root. Double accidentals are a visitor choice: simplified (plain note, exact spelling in a tooltip) or theoretically correct (Ebb, F##, plain note in the tooltip), picked in an unskippable first-visit modal and changeable in the settings.
 - No audio, quizzes or accounts. Standard tuning only. Frets 0 to 15 on all instruments. No finger numbers.
 - Analytics data is kept for 12 months (see open questions).
 

@@ -57,10 +57,16 @@ Feature: The scale behind the chord
     Then the scale notes are spelled with sharps as "C#", "D#", "E#", "F#", "G#", "A#", "B#"
 
   @US-1106
-  Scenario: Double accidentals are shown as the plain enharmonic note
-    Given the correct spelling of a scale note needs a double accidental
-    Then the note is shown as the plain enharmonic note
-    And a tooltip gives the theoretically correct spelling
+  Scenario Outline: Scale notes follow the chosen note names
+    Given the note names are set to "<mode>"
+    When I select the chord "D#" "Major"
+    Then the scale notes are <notes>
+    And a tooltip on a note with a different second name gives that name
+
+    Examples:
+      | mode                  | notes                           |
+      | Simplified            | D#, E#, G, G#, A#, B#, D, D#    |
+      | Theoretically correct | D#, E#, F##, G#, A#, B#, C##, D# |
 
   @US-1107
   Scenario: Every chord note belongs to the scale

@@ -15,13 +15,29 @@ describe('chord spelling (US-502, 503, 403)', () => {
   ];
   it.each(cases)('%s %s = %s', (r, t, expected) => expect(names(r, t)).toBe(expected));
 
-  it('shows the correct spelling, with double accidentals, and keeps the plain note as a hint', () => {
-    const n = spellDegree('C', 'bb7');
-    expect(n.name).toBe('Bbb');
-    expect(n.plain).toBe('A');
-    expect(n.respelled).toBe(true);
-    expect(spellDegree('D#', '3')).toMatchObject({ name: 'F##', plain: 'G', respelled: true });
-    expect(spellDegree('C', '3')).toMatchObject({ name: 'E', plain: 'E', respelled: false });
+  it('correct spelling uses double accidentals and keeps the plain note as the alternative', () => {
+    const n = spellDegree('C', 'bb7', 'correct');
+    expect(n).toMatchObject({ name: 'Bbb', alt: 'A', respelled: true });
+    expect(spellDegree('D#', '3', 'correct')).toMatchObject({ name: 'F##', alt: 'G', respelled: true });
+    expect(spellDegree('C', '3', 'correct')).toMatchObject({ name: 'E', alt: 'E', respelled: false });
+  });
+
+  it('simple spelling shows plain notes and keeps the exact spelling as the alternative', () => {
+    expect(spellDegree('C', 'bb7', 'simple')).toMatchObject({ name: 'A', alt: 'Bbb', respelled: true });
+    expect(spellDegree('D#', '3', 'simple')).toMatchObject({ name: 'G', alt: 'F##', respelled: true });
+    const simple = (r: RootName, t: ChordType) => chordNotes(r, t, 'simple').map((n) => n.name).join(',');
+    expect(simple('F', 'dim7')).toBe('F,Ab,Cb,D');
+    expect(simple('C', 'dim7')).toBe('C,Eb,Gb,A');
+    expect(simple('A#', 'aug')).toBe('A#,D,F#');
+    for (const r of ROOT_NAMES) for (const t of CHORD_TYPES) chordNotes(r, t, 'simple').forEach((n) => expect(n.name).toMatch(/^[A-G](#|b)?$/));
+  });
+
+  it('both spellings describe the same sounds', () => {
+    for (const r of ROOT_NAMES) for (const t of CHORD_TYPES) {
+      const a = chordNotes(r, t, 'simple').map((n) => n.pc);
+      const b = chordNotes(r, t, 'correct').map((n) => n.pc);
+      expect(a).toEqual(b);
+    }
   });
 
   it('never uses H', () => {
@@ -42,7 +58,7 @@ describe('all 144 combinations (US-1011)', () => {
         chordNotes(r, t).forEach((n) => {
           expect(n.pc).toBe((rootPitchClass(r) + DEGREES[n.degree].steps) % 12);
           expect(n.name).toMatch(/^[A-G](##|#|bb|b)?$/);
-          expect(n.plain).toMatch(/^[A-G](#|b)?$/);
+          expect(n.alt).toMatch(/^[A-G](##|#|bb|b)?$/);
         });
       }
     }

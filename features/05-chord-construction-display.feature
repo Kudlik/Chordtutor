@@ -50,10 +50,16 @@ Feature: Seeing how a chord is built on the fretboard
       | A    | sus4  | A, D, E         |
 
   @US-504
-  Scenario: Double accidentals are shown as the plain enharmonic note
+  Scenario Outline: Double accidentals follow the chosen note names
+    Given the note names are set to "<mode>"
     When I select the chord "C" "dim7"
-    Then the dot for the seventh shows the note "A" and the degree "bb7"
-    And the tooltip of that dot also explains that the theoretically correct spelling is "Bbb"
+    Then the dot for the seventh shows the note "<note>" and the degree "bb7"
+    And a tooltip on the dot says "<tooltip>"
+
+    Examples:
+      | mode                  | note | tooltip                    |
+      | Simplified            | A    | Theoretically spelled Bbb  |
+      | Theoretically correct | Bbb  | Sounds like A              |
 
   @US-505
   Scenario: Notes and degrees have distinct visual styles

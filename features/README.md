@@ -15,6 +15,7 @@ Each `.feature` file is one epic. Each `@US-xxx` tag is one user story. Every sc
 | 09-analytics-consent | GA4 behind a consent modal |
 | 10-accessibility-quality | Accessibility, performance, theory tests |
 | 11-scale-display | The scale behind the chord, and a switch for other matching scales |
+| 12-note-spelling | First-visit choice: simplified or theoretically correct note names |
 
 ## Reference: chord formulas
 
@@ -42,7 +43,7 @@ Each `.feature` file is one epic. Each `@US-xxx` tag is one user story. Every sc
 - The theme can be set to System, Light or Dark in the settings (US-1008, US-1012, US-1013).
 - The settings show links to the author's Spotify and LinkedIn pages (US-108).
 - Chord types sit in one "Variant" list. The earlier Triads / Other chords grouping is dropped (US-701 and US-702 removed; US-405 rewritten).
-- Note names are spelled correctly for the chosen root. Double accidentals are shown as the plain enharmonic note, with a tooltip.
+- Note names are spelled correctly for the chosen root. Double accidentals (Ebb, F##) are handled by a visitor setting chosen in an unskippable first-visit modal and changeable in the settings (US-1201 to US-1210): "Simplified" shows the plain note (D) with the exact spelling in a tooltip; "Theoretically correct" shows Ebb with "Sounds like D" in the tooltip.
 - Each dot shows the note (large) and the degree (small), with a colour per degree. Colour is never the only cue.
 - No audio, no quizzes, no accounts in the MVP.
 - Standard tuning only. Left-handed mode for every instrument. The ukulele is high G (re-entrant) only; no low G switch.

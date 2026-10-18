@@ -4,6 +4,7 @@ import { ConsentDialog } from './components/ConsentDialog';
 import { Fretboard } from './components/Fretboard';
 import { Segmented } from './components/Segmented';
 import { ScaleStrip } from './components/ScaleStrip';
+import { SpellingDialog } from './components/SpellingDialog';
 import { SettingsDialog } from './components/SettingsDialog';
 import { DEGREE_COLORS } from './degreeColors';
 import { getConsent } from './analytics';
@@ -41,11 +42,14 @@ export function App() {
   const t = useMemo(() => makeT(state.lang), [state.lang]);
   const vertical = useMediaQuery('(max-width: 600px)');
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [consentOpen, setConsentOpen] = useState(() => getConsent() === null);
+  // On the first visit the spelling choice comes first; the consent dialog follows it.
+  const spellingPending = state.spelling === null;
+  const [consentOpen, setConsentOpen] = useState(() => state.spelling !== null && getConsent() === null);
   const [firstVisit, setFirstVisit] = useState(() => getConsent() === null);
+  const spelling = state.spelling ?? 'simple';
 
   const { instrument, root, type } = state;
-  const notes = useMemo(() => chordNotes(root, type), [root, type]);
+  const notes = useMemo(() => chordNotes(root, type, spelling), [root, type, spelling]);
   const voicings = useMemo(() => voicingsFor(instrument, root, type), [instrument, root, type]);
   const voicingIndex = Math.min(state.voicing, Math.max(0, voicings.length - 1));
   const typeLabel = t(`type.${type}` as 'type.Major');
@@ -119,7 +123,7 @@ export function App() {
             </div>
           </div>
 
-          <ScaleStrip root={root} type={type} chord={notes} t={t} />
+          <ScaleStrip root={root} type={type} chord={notes} spelling={spelling} t={t} />
         </div>
 
         <div className="stage">
@@ -136,6 +140,7 @@ export function App() {
               voicing={voicings[voicingIndex]}
               notes={notes}
               left={state.left}
+              spelling={spelling}
               vertical={vertical}
               chordName={title}
               voicingNumber={voicingIndex + 1}
@@ -170,7 +175,7 @@ export function App() {
             </div>
           </div>
 
-          <Explanation root={root} type={type} t={t} onSelectType={(ct) => update({ type: ct })} />
+          <Explanation root={root} type={type} spelling={spelling} t={t} onSelectType={(ct) => update({ type: ct })} />
         </div>
       </main>
 
@@ -185,12 +190,22 @@ export function App() {
         t={t}
         left={state.left}
         lang={state.lang}
+        spelling={spelling}
+        onSpelling={(sp) => update({ spelling: sp })}
         theme={state.theme}
         onTheme={(theme) => update({ theme })}
         onLeft={(left) => update({ left })}
         onLang={(lang) => update({ lang })}
         onAnalytics={() => { setSettingsOpen(false); setFirstVisit(false); setConsentOpen(true); }}
         onClose={() => setSettingsOpen(false)}
+      />
+      <SpellingDialog
+        open={spellingPending}
+        t={t}
+        onChoose={(sp) => {
+          update({ spelling: sp });
+          if (getConsent() === null) setConsentOpen(true);
+        }}
       />
       <ConsentDialog open={consentOpen} firstVisit={firstVisit} t={t} onDone={() => { setConsentOpen(false); setFirstVisit(false); }} />
     </div>

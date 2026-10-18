@@ -14,7 +14,11 @@ export function Dialog({ open, title, onClose, children, persistent }: Props) {
   useEffect(() => {
     const d = ref.current;
     if (!d) return;
-    if (open && !d.open) d.showModal();
+    if (open && !d.open) {
+      d.showModal();
+      // Start on the heading, so no option looks pre-selected.
+      d.querySelector<HTMLElement>('h2')?.focus();
+    }
     if (!open && d.open) d.close();
   }, [open]);
 
@@ -33,7 +37,7 @@ export function Dialog({ open, title, onClose, children, persistent }: Props) {
     >
       {open && (
         <div className="dialog-body">
-          <h2 id="dialog-title">{title}</h2>
+          <h2 id="dialog-title" tabIndex={-1}>{title}</h2>
           {children}
         </div>
       )}

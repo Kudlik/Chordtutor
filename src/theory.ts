@@ -55,6 +55,9 @@ export const RELATED: Record<ChordType, ChordType[]> = {
   '7sus4': ['sus4', '7'],
 };
 
+/** How notes are named: `simple` shows plain notes, `correct` also uses double flats and sharps (Ebb, F##). */
+export type Spelling = 'simple' | 'correct';
+
 export const ROOT_NAMES = ['C', 'C#', 'Db', 'D', 'D#', 'Eb', 'E', 'F', 'F#', 'Gb', 'G', 'G#', 'Ab', 'A', 'A#', 'Bb', 'B'] as const;
 export type RootName = (typeof ROOT_NAMES)[number];
 
@@ -93,28 +96,29 @@ export interface SpelledNote extends SpelledPitch {
 
 export interface SpelledPitch {
   pc: number;
-  /** Theoretically correct spelling shown to the user, e.g. "Ebb" or "F##". */
+  /** Name shown to the user, depending on the chosen spelling. */
   name: string;
-  /** The plain note it sounds like, e.g. "D". */
-  plain: string;
-  /** True when `name` has a double accidental, so `plain` is a different name. */
+  /** The other name for the same note: the plain note in "correct" mode, the exact spelling in "simple" mode. */
+  alt: string;
+  /** True when the exact spelling has a double accidental, so the two names differ. */
   respelled: boolean;
 }
 
 /** Spell the note `steps` semitones above the root, using the letter `number` - 1 letters above the root's. */
-function spellInterval(root: RootName, steps: number, number: number): SpelledPitch {
+function spellInterval(root: RootName, steps: number, number: number, spelling: Spelling): SpelledPitch {
   const pc = mod(rootPitchClass(root) + steps, 12);
   const letterIdx = mod(LETTERS.indexOf(root[0]) + number - 1, 7);
   const diff = mod(pc - NATURAL_PC[letterIdx] + 6, 12) - 6;
   const exact = LETTERS[letterIdx] + (diff > 0 ? '#'.repeat(diff) : 'b'.repeat(-diff));
   const respelled = Math.abs(diff) >= 2;
   const useFlats = diff < 0;
-  return { pc, name: exact, plain: respelled ? (useFlats ? FLAT_NAMES : SHARP_NAMES)[pc] : exact, respelled };
+  const plain = respelled ? (useFlats ? FLAT_NAMES : SHARP_NAMES)[pc] : exact;
+  return spelling === 'correct' ? { pc, name: exact, alt: plain, respelled } : { pc, name: plain, alt: exact, respelled };
 }
 
-export function spellDegree(root: RootName, degree: DegreeId): SpelledNote {
+export function spellDegree(root: RootName, degree: DegreeId, spelling: Spelling = 'correct'): SpelledNote {
   const { steps, number } = DEGREES[degree];
-  return { ...spellInterval(root, steps, number), degree };
+  return { ...spellInterval(root, steps, number, spelling), degree };
 }
 
 export type ScaleId =
@@ -169,12 +173,12 @@ export function matchingScales(type: ChordType): ScaleId[] {
 }
 
 /** Notes of the scale starting on the root, without the repeated octave note. */
-export function scaleNotes(root: RootName, scale: ScaleId): SpelledPitch[] {
-  return SCALES[scale].map(([steps, number]) => spellInterval(root, steps, number));
+export function scaleNotes(root: RootName, scale: ScaleId, spelling: Spelling = 'correct'): SpelledPitch[] {
+  return SCALES[scale].map(([steps, number]) => spellInterval(root, steps, number, spelling));
 }
 
-export function chordNotes(root: RootName, type: ChordType): SpelledNote[] {
-  return CHORD_FORMULAS[type].map((d) => spellDegree(root, d));
+export function chordNotes(root: RootName, type: ChordType, spelling: Spelling = 'correct'): SpelledNote[] {
+  return CHORD_FORMULAS[type].map((d) => spellDegree(root, d, spelling));
 }
 
 export function stepsOf(type: ChordType): number[] {

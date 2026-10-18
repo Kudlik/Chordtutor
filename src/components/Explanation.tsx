@@ -1,19 +1,20 @@
 import { useState } from 'react';
 import type { TFunction } from '../i18n';
-import { CHORD_FORMULAS, RELATED, chordNotes, stepsOf, type ChordType, type RootName } from '../theory';
+import { CHORD_FORMULAS, RELATED, chordNotes, stepsOf, type ChordType, type RootName, type Spelling } from '../theory';
 
 interface Props {
   root: RootName;
   type: ChordType;
+  spelling: Spelling;
   t: TFunction;
   onSelectType: (type: ChordType) => void;
 }
 
 type Term = 'semitone' | 'degree';
 
-export function Explanation({ root, type, t, onSelectType }: Props) {
+export function Explanation({ root, type, spelling, t, onSelectType }: Props) {
   const [open, setOpen] = useState<Term | null>(null);
-  const notes = chordNotes(root, type).map((n) => n.name).join(', ');
+  const notes = chordNotes(root, type, spelling).map((n) => n.name).join(', ');
   const toggle = (term: Term) => setOpen((o) => (o === term ? null : term));
 
   const termButton = (term: Term) => (

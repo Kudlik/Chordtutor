@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { DEGREE_COLORS } from '../degreeColors';
 import { MAX_FRET, TUNINGS, type Instrument } from '../instruments';
 import type { TFunction } from '../i18n';
-import type { SpelledNote } from '../theory';
+import { altNoteText } from '../spelling';
+import type { Spelling, SpelledNote } from '../theory';
 import type { Voicing } from '../voicings';
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
   notes: SpelledNote[];
   left: boolean;
   vertical: boolean;
+  spelling: Spelling;
   chordName: string;
   voicingNumber: number;
   t: TFunction;
@@ -58,7 +60,7 @@ function geometry(n: number, vertical: boolean, left: boolean): Geo {
   };
 }
 
-export function Fretboard({ instrument, voicing, notes, left, vertical, chordName, voicingNumber, t }: Props) {
+export function Fretboard({ instrument, voicing, notes, left, vertical, spelling, chordName, voicingNumber, t }: Props) {
   const tuning = TUNINGS[instrument];
   const n = tuning.length;
   const g = geometry(n, vertical, left);
@@ -224,7 +226,7 @@ export function Fretboard({ instrument, voicing, notes, left, vertical, chordNam
           const p = g.P(d.string, open ? g.openU : d.fret - 0.5);
           const r = (open ? openR : dotR) + 6;
           const line1 = `${d.note.degree} · ${t(`degree.${d.note.degree}` as 'degree.1')}`;
-          const line2 = d.note.respelled ? t('board.soundsLike', { plain: d.note.plain }) : null;
+          const line2 = d.note.respelled ? altNoteText(t, spelling, d.note.alt) : null;
           const w = Math.max(line1.length, line2?.length ?? 0) * 6.6 + 20;
           const h = line2 ? 44 : 28;
           const x = Math.min(Math.max(p.x - w / 2, 4), g.w - w - 4);
