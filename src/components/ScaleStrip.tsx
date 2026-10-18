@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { DEGREE_COLORS } from '../degreeColors';
 import type { TFunction } from '../i18n';
 import { altNoteText } from '../spelling';
-import { SCALE_OF, matchingScales, scaleNotes, type ChordType, type RootName, type ScaleId, type Spelling, type SpelledNote } from '../theory';
+import { SCALE_OF, matchingScales, scaleChips, type ChordType, type RootName, type ScaleId, type Spelling, type SpelledNote } from '../theory';
 
 interface Props {
   root: RootName;
@@ -14,14 +14,13 @@ interface Props {
 }
 
 function ScaleRow({ root, scale, chord, spelling, t, labelId }: { root: RootName; scale: ScaleId; chord: SpelledNote[]; spelling: Spelling; t: TFunction; labelId: string }) {
-  const notes = scaleNotes(root, scale, spelling);
+  const notes = scaleChips(root, scale, chord, spelling);
   // Repeat the root an octave higher, so the scale reads D E F# G A B C# D.
   const shown = [...notes, notes[0]];
-  const byPc = new Map(chord.map((n) => [n.pc, n]));
   return (
     <ol className="scale" aria-labelledby={labelId}>
       {shown.map((n, i) => {
-        const tone = byPc.get(n.pc);
+        const tone = n.tone;
         const col = tone ? DEGREE_COLORS[tone.degree] : undefined;
         return (
           <li

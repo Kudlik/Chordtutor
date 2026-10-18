@@ -177,6 +177,21 @@ export function scaleNotes(root: RootName, scale: ScaleId, spelling: Spelling = 
   return SCALES[scale].map(([steps, number]) => spellInterval(root, steps, number, spelling));
 }
 
+export interface ScaleChip extends SpelledPitch {
+  /** The chord note this scale note is, when it is one. */
+  tone?: SpelledNote;
+}
+
+/** Scale notes for display. A scale note that is also a chord note takes the chord's spelling,
+ *  so the scale and the fretboard always agree (e.g. C dim7 shows Bbb, not A, in its scale). */
+export function scaleChips(root: RootName, scale: ScaleId, chord: SpelledNote[], spelling: Spelling): ScaleChip[] {
+  const byPc = new Map(chord.map((n) => [n.pc, n]));
+  return scaleNotes(root, scale, spelling).map((n) => {
+    const tone = byPc.get(n.pc);
+    return tone ? { pc: n.pc, name: tone.name, alt: tone.alt, respelled: tone.respelled, tone } : n;
+  });
+}
+
 export function chordNotes(root: RootName, type: ChordType, spelling: Spelling = 'correct'): SpelledNote[] {
   return CHORD_FORMULAS[type].map((d) => spellDegree(root, d, spelling));
 }

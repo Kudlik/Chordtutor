@@ -165,3 +165,22 @@ Feature: The scale behind the chord
     Then the switch and the other scales disappear
     When I change the note names back to "Theoretically correct"
     Then the switch is shown again
+
+  @US-1119
+  Scenario Outline: A highlighted scale note has the same name as the chord note
+    Given the note names are set to "<mode>"
+    When I select the chord "C" "dim7"
+    Then the seventh of the chord is named "<note>" on the fretboard, in the legend and in the highlighted scale note
+    And this also holds in the scales listed under "Show other matching scales"
+
+    Examples:
+      | mode                  | note |
+      | Simplified            | A    |
+      | Theoretically correct | Bbb  |
+
+  @US-1120
+  Scenario: Every place that shows a note agrees on its name
+    Given the 12 roots, both spellings of the black-key roots and the 12 chord types
+    And any instrument, language and note-name setting
+    Then the chord notes line, the legend, the fretboard dots, the "Example in" text and every highlighted scale note use the same names
+    # Verified by an automated test and by a scripted check of the running app

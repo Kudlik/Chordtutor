@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CHORD_FORMULAS, DEGREES, SCALE_OF, matchingScales, scaleNotes, CHORD_TYPES, ROOT_NAMES, chordNotes, rootPitchClass, spellDegree, stepsOf, type ChordType, type RootName } from './theory';
+import { CHORD_FORMULAS, DEGREES, SCALE_OF, matchingScales, scaleChips, scaleNotes, CHORD_TYPES, ROOT_NAMES, chordNotes, rootPitchClass, spellDegree, stepsOf, type ChordType, type RootName } from './theory';
 import raw from './data/chord_voicings.md?raw';
 
 const names = (r: RootName, t: ChordType) => chordNotes(r, t).map((n) => n.name).join(',');
@@ -139,5 +139,29 @@ describe('scales shown under the variants', () => {
     expect(scaleNotes('C', 'harmonicMinor').map((n) => n.name).join(' ')).toBe('C D Eb F G Ab B');
     expect(scaleNotes('C', 'lydian').map((n) => n.name).join(' ')).toBe('C D E F# G A B');
     expect(scaleNotes('C', 'diminishedHalfWhole').map((n) => n.name).join(' ')).toBe('C Db Eb E F# G A Bb');
+  });
+
+  it('a scale note that is a chord note uses the chord spelling', () => {
+    const names = (r: RootName, t: ChordType, sp: 'simple' | 'correct') => scaleChips(r, SCALE_OF[t], chordNotes(r, t, sp), sp).map((n) => n.name).join(' ');
+    expect(names('C', 'dim7', 'correct')).toBe('C D Eb F Gb Ab Bbb B');
+    expect(names('C', 'dim7', 'simple')).toBe('C D Eb F Gb Ab A B');
+    expect(names('Eb', 'dim7', 'correct')).toBe('Eb F Gb Ab Bbb Cb Dbb D');
+    expect(names('D', 'Major', 'correct')).toBe('D E F# G A B C#');
+    // Every highlighted note carries exactly the chord's name, in both spellings.
+    for (const sp of ['simple', 'correct'] as const) {
+      for (const r of ROOT_NAMES) for (const t of CHORD_TYPES) {
+        const chord = chordNotes(r, t, sp);
+        const chips = scaleChips(r, SCALE_OF[t], chord, sp);
+        for (const c of chord) expect(chips.some((chip) => chip.tone?.pc === c.pc && chip.name === c.name), `${sp} ${r} ${t} ${c.name}`).toBe(true);
+      }
+    }
+    // Other matching scales too.
+    for (const r of ROOT_NAMES) for (const t of CHORD_TYPES) {
+      const chord = chordNotes(r, t, 'correct');
+      for (const id of matchingScales(t)) {
+        const chips = scaleChips(r, id, chord, 'correct');
+        for (const c of chord) expect(chips.some((chip) => chip.name === c.name), `${r} ${t} in ${id}: ${c.name}`).toBe(true);
+      }
+    }
   });
 });
