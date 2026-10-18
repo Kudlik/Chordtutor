@@ -206,7 +206,7 @@ export function Fretboard({ instrument, voicing, notes, left, vertical, chordNam
               <circle cx={p.x} cy={p.y} r={r + 8} fill="transparent" />
               {d.note.degree === '1' && <circle cx={p.x} cy={p.y} r={r + 5} fill="none" stroke={col.fill} strokeWidth={2} />}
               <circle cx={p.x} cy={p.y} r={r} fill={col.fill} stroke={open ? 'var(--outline)' : 'none'} strokeWidth={1.5} />
-              <text x={p.x} y={p.y + (open ? 1 : 3)} fontSize={open ? 12 : vertical ? 14 : 16} fontWeight={500} fill={col.text} pointerEvents="none">
+              <text x={p.x} y={p.y + (open ? 1 : 3)} fontSize={(open ? 12 : vertical ? 14 : 16) - (d.note.name.length > 2 ? (open ? 2 : 3) : 0)} fontWeight={500} fill={col.text} pointerEvents="none">
                 {d.note.name}
               </text>
               <text x={p.x} y={p.y + (open ? 11 : 16)} fontSize={open ? 8 : 10} fill={col.text} pointerEvents="none">
@@ -224,7 +224,7 @@ export function Fretboard({ instrument, voicing, notes, left, vertical, chordNam
           const p = g.P(d.string, open ? g.openU : d.fret - 0.5);
           const r = (open ? openR : dotR) + 6;
           const line1 = `${d.note.degree} · ${t(`degree.${d.note.degree}` as 'degree.1')}`;
-          const line2 = d.note.respelled ? t('board.respelled', { exact: d.note.exact }) : null;
+          const line2 = d.note.respelled ? t('board.soundsLike', { plain: d.note.plain }) : null;
           const w = Math.max(line1.length, line2?.length ?? 0) * 6.6 + 20;
           const h = line2 ? 44 : 28;
           const x = Math.min(Math.max(p.x - w / 2, 4), g.w - w - 4);

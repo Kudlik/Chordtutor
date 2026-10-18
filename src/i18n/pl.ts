@@ -74,7 +74,7 @@ export const pl: Record<TranslationKey, string> = {
   'scale.showOthers': 'Pokaż inne pasujące skale',
   'scale.othersHeading': 'Inne skale zawierające dźwięki tego akordu',
   'legend.label': 'Legenda',
-  'board.respelled': 'Zapis teoretyczny: {exact}',
+  'board.soundsLike': 'Brzmi jak {plain}',
   'board.muted': 'wyciszona',
   'board.open': 'pusta',
   'board.fret': 'próg {n}',

@@ -7,19 +7,21 @@ const names = (r: RootName, t: ChordType) => chordNotes(r, t).map((n) => n.name)
 describe('chord spelling (US-502, 503, 403)', () => {
   const cases: [RootName, ChordType, string][] = [
     ['C', 'Major', 'C,E,G'], ['C', 'Minor', 'C,Eb,G'], ['C', '5', 'C,G'], ['C', '7', 'C,E,G,Bb'],
-    ['C', 'dim', 'C,Eb,Gb'], ['C', 'dim7', 'C,Eb,Gb,A'], ['C', 'aug', 'C,E,G#'], ['C', 'sus2', 'C,D,G'],
+    ['C', 'dim', 'C,Eb,Gb'], ['C', 'dim7', 'C,Eb,Gb,Bbb'], ['C', 'aug', 'C,E,G#'], ['C', 'sus2', 'C,D,G'],
     ['C', 'sus4', 'C,F,G'], ['C', 'maj7', 'C,E,G,B'], ['C', 'm7', 'C,Eb,G,Bb'], ['C', '7sus4', 'C,F,G,Bb'],
     ['C#', 'Major', 'C#,E#,G#'], ['Db', 'Major', 'Db,F,Ab'], ['F#', 'Major', 'F#,A#,C#'], ['Gb', 'Major', 'Gb,Bb,Db'],
-    ['Eb', 'Minor', 'Eb,Gb,Bb'], ['D#', 'Minor', 'D#,F#,A#'], ['C#', 'dim7', 'C#,E,G,Bb'], ['G#', 'dim7', 'G#,B,D,F'],
+    ['Eb', 'Minor', 'Eb,Gb,Bb'], ['D#', 'Minor', 'D#,F#,A#'], ['C#', 'dim7', 'C#,E,G,Bb'], ['G#', 'dim7', 'G#,B,D,F'], ['F', 'dim7', 'F,Ab,Cb,Ebb'], ['D#', 'Major', 'D#,F##,A#'], ['Gb', 'Minor', 'Gb,Bbb,Db'], ['A#', 'aug', 'A#,C##,E##'],
     ['F#', 'maj7', 'F#,A#,C#,E#'], ['A', 'sus4', 'A,D,E'], ['G', 'Major', 'G,B,D'], ['G', '7', 'G,B,D,F'],
   ];
   it.each(cases)('%s %s = %s', (r, t, expected) => expect(names(r, t)).toBe(expected));
 
-  it('shows double accidentals as plain notes with the exact spelling kept', () => {
+  it('shows the correct spelling, with double accidentals, and keeps the plain note as a hint', () => {
     const n = spellDegree('C', 'bb7');
-    expect(n.name).toBe('A');
-    expect(n.exact).toBe('Bbb');
+    expect(n.name).toBe('Bbb');
+    expect(n.plain).toBe('A');
     expect(n.respelled).toBe(true);
+    expect(spellDegree('D#', '3')).toMatchObject({ name: 'F##', plain: 'G', respelled: true });
+    expect(spellDegree('C', '3')).toMatchObject({ name: 'E', plain: 'E', respelled: false });
   });
 
   it('never uses H', () => {
@@ -39,7 +41,8 @@ describe('all 144 combinations (US-1011)', () => {
       for (const t of CHORD_TYPES) {
         chordNotes(r, t).forEach((n) => {
           expect(n.pc).toBe((rootPitchClass(r) + DEGREES[n.degree].steps) % 12);
-          expect(n.name).toMatch(/^[A-G](#|b)?$/);
+          expect(n.name).toMatch(/^[A-G](##|#|bb|b)?$/);
+          expect(n.plain).toMatch(/^[A-G](#|b)?$/);
         });
       }
     }
@@ -89,7 +92,7 @@ describe('scales shown under the variants', () => {
         expect(notes[0].pc, `${r} ${t}`).toBe(rootPitchClass(r));
         const pcs = new Set(notes.map((n) => n.pc));
         for (const c of chordNotes(r, t)) expect(pcs.has(c.pc), `${r} ${t} lacks ${c.name}`).toBe(true);
-        notes.forEach((n) => expect(n.name).toMatch(/^[A-G](#|b)?$/));
+        notes.forEach((n) => expect(n.name).toMatch(/^[A-G](##|#|bb|b)?$/));
       }
     }
   });

@@ -26,7 +26,7 @@ function ScaleRow({ root, scale, chord, t, labelId }: { root: RootName; scale: S
             key={i}
             className={tone ? 'scale-note chord-tone' : 'scale-note'}
             style={col ? { background: col.fill, color: col.text } : undefined}
-            title={n.respelled ? t('board.respelled', { exact: n.exact }) : undefined}
+            title={n.respelled ? t('board.soundsLike', { plain: n.plain }) : undefined}
           >
             {n.name}
             {tone && <span className="sr-only"> ({t('scale.chordTone')})</span>}

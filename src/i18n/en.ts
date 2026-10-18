@@ -71,7 +71,7 @@ export const en = {
   'scale.showOthers': 'Show other matching scales',
   'scale.othersHeading': 'Other scales that contain these chord notes',
   'legend.label': 'Legend',
-  'board.respelled': 'Theoretically spelled {exact}',
+  'board.soundsLike': 'Sounds like {plain}',
   'board.muted': 'muted',
   'board.open': 'open',
   'board.fret': 'fret {n}',

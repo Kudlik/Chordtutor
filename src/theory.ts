@@ -93,11 +93,11 @@ export interface SpelledNote extends SpelledPitch {
 
 export interface SpelledPitch {
   pc: number;
-  /** Name shown to the user: double accidentals become the plain enharmonic note. */
+  /** Theoretically correct spelling shown to the user, e.g. "Ebb" or "F##". */
   name: string;
-  /** Theoretically correct spelling, e.g. "Bbb". */
-  exact: string;
-  /** True when `name` differs from `exact`. */
+  /** The plain note it sounds like, e.g. "D". */
+  plain: string;
+  /** True when `name` has a double accidental, so `plain` is a different name. */
   respelled: boolean;
 }
 
@@ -107,9 +107,9 @@ function spellInterval(root: RootName, steps: number, number: number): SpelledPi
   const letterIdx = mod(LETTERS.indexOf(root[0]) + number - 1, 7);
   const diff = mod(pc - NATURAL_PC[letterIdx] + 6, 12) - 6;
   const exact = LETTERS[letterIdx] + (diff > 0 ? '#'.repeat(diff) : 'b'.repeat(-diff));
-  if (Math.abs(diff) < 2) return { pc, name: exact, exact, respelled: false };
-  const useFlats = root.endsWith('b') || root === 'F';
-  return { pc, name: (useFlats ? FLAT_NAMES : SHARP_NAMES)[pc], exact, respelled: true };
+  const respelled = Math.abs(diff) >= 2;
+  const useFlats = diff < 0;
+  return { pc, name: exact, plain: respelled ? (useFlats ? FLAT_NAMES : SHARP_NAMES)[pc] : exact, respelled };
 }
 
 export function spellDegree(root: RootName, degree: DegreeId): SpelledNote {
