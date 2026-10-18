@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CHORD_FORMULAS, DEGREES, CHORD_TYPES, ROOT_NAMES, chordNotes, rootPitchClass, spellDegree, stepsOf, type ChordType, type RootName } from './theory';
+import { CHORD_FORMULAS, DEGREES, SCALE_OF, scaleNotes, CHORD_TYPES, ROOT_NAMES, chordNotes, rootPitchClass, spellDegree, stepsOf, type ChordType, type RootName } from './theory';
 import raw from './data/chord_voicings.md?raw';
 
 const names = (r: RootName, t: ChordType) => chordNotes(r, t).map((n) => n.name).join(',');
@@ -64,5 +64,33 @@ describe('all 144 combinations (US-1011)', () => {
   it('formulas have the agreed degrees', () => {
     expect(CHORD_FORMULAS.dim7).toEqual(['1', 'b3', 'b5', 'bb7']);
     expect(CHORD_FORMULAS['7sus4']).toEqual(['1', '4', '5', 'b7']);
+  });
+});
+
+describe('scales shown under the variants', () => {
+  const scale = (r: RootName, t: ChordType) => scaleNotes(r, SCALE_OF[t]).map((n) => n.name).join(' ');
+
+  it('spells the scale of each chord type correctly', () => {
+    expect(scale('D', 'Major')).toBe('D E F# G A B C#');
+    expect(scale('C', 'Minor')).toBe('C D Eb F G Ab Bb');
+    expect(scale('G', '7')).toBe('G A B C D E F');
+    expect(scale('C', 'm7')).toBe('C D Eb F G A Bb');
+    expect(scale('B', 'dim')).toBe('B C D E F G A');
+    expect(scale('C', 'aug')).toBe('C D E F# G# Bb');
+    expect(scale('C', 'dim7')).toBe('C D Eb F Gb Ab A B');
+    expect(scale('Db', 'Major')).toBe('Db Eb F Gb Ab Bb C');
+    expect(scale('F#', 'Major')).toBe('F# G# A# B C# D# E#');
+  });
+
+  it('starts on the root and contains every note of the chord, for all 144 chords', () => {
+    for (const r of ROOT_NAMES) {
+      for (const t of CHORD_TYPES) {
+        const notes = scaleNotes(r, SCALE_OF[t]);
+        expect(notes[0].pc, `${r} ${t}`).toBe(rootPitchClass(r));
+        const pcs = new Set(notes.map((n) => n.pc));
+        for (const c of chordNotes(r, t)) expect(pcs.has(c.pc), `${r} ${t} lacks ${c.name}`).toBe(true);
+        notes.forEach((n) => expect(n.name).toMatch(/^[A-G](#|b)?$/));
+      }
+    }
   });
 });

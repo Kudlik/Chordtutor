@@ -87,9 +87,12 @@ export function rootPitchClass(root: RootName): number {
   return mod(NATURAL_PC[letter] + acc, 12);
 }
 
-export interface SpelledNote {
-  pc: number;
+export interface SpelledNote extends SpelledPitch {
   degree: DegreeId;
+}
+
+export interface SpelledPitch {
+  pc: number;
   /** Name shown to the user: double accidentals become the plain enharmonic note. */
   name: string;
   /** Theoretically correct spelling, e.g. "Bbb". */
@@ -98,15 +101,55 @@ export interface SpelledNote {
   respelled: boolean;
 }
 
-export function spellDegree(root: RootName, degree: DegreeId): SpelledNote {
-  const { steps, number } = DEGREES[degree];
+/** Spell the note `steps` semitones above the root, using the letter `number` - 1 letters above the root's. */
+function spellInterval(root: RootName, steps: number, number: number): SpelledPitch {
   const pc = mod(rootPitchClass(root) + steps, 12);
   const letterIdx = mod(LETTERS.indexOf(root[0]) + number - 1, 7);
   const diff = mod(pc - NATURAL_PC[letterIdx] + 6, 12) - 6;
   const exact = LETTERS[letterIdx] + (diff > 0 ? '#'.repeat(diff) : 'b'.repeat(-diff));
-  if (Math.abs(diff) < 2) return { pc, degree, name: exact, exact, respelled: false };
+  if (Math.abs(diff) < 2) return { pc, name: exact, exact, respelled: false };
   const useFlats = root.endsWith('b') || root === 'F';
-  return { pc, degree, name: (useFlats ? FLAT_NAMES : SHARP_NAMES)[pc], exact, respelled: true };
+  return { pc, name: (useFlats ? FLAT_NAMES : SHARP_NAMES)[pc], exact, respelled: true };
+}
+
+export function spellDegree(root: RootName, degree: DegreeId): SpelledNote {
+  const { steps, number } = DEGREES[degree];
+  return { ...spellInterval(root, steps, number), degree };
+}
+
+export type ScaleId = 'major' | 'naturalMinor' | 'dorian' | 'mixolydian' | 'locrian' | 'wholeTone' | 'diminished';
+
+/** Scale intervals as [semitones above the root, letter number]. */
+const SCALES: Record<ScaleId, [number, number][]> = {
+  major: [[0, 1], [2, 2], [4, 3], [5, 4], [7, 5], [9, 6], [11, 7]],
+  naturalMinor: [[0, 1], [2, 2], [3, 3], [5, 4], [7, 5], [8, 6], [10, 7]],
+  dorian: [[0, 1], [2, 2], [3, 3], [5, 4], [7, 5], [9, 6], [10, 7]],
+  mixolydian: [[0, 1], [2, 2], [4, 3], [5, 4], [7, 5], [9, 6], [10, 7]],
+  locrian: [[0, 1], [1, 2], [3, 3], [5, 4], [6, 5], [8, 6], [10, 7]],
+  wholeTone: [[0, 1], [2, 2], [4, 3], [6, 4], [8, 5], [10, 7]],
+  // Whole-half diminished: the scale that contains dim7.
+  diminished: [[0, 1], [2, 2], [3, 3], [5, 4], [6, 5], [8, 6], [9, 6], [11, 7]],
+};
+
+/** The scale shown for each chord type: the one the chord is built from. */
+export const SCALE_OF: Record<ChordType, ScaleId> = {
+  Major: 'major',
+  Minor: 'naturalMinor',
+  '7': 'mixolydian',
+  '5': 'major',
+  dim: 'locrian',
+  dim7: 'diminished',
+  aug: 'wholeTone',
+  sus2: 'major',
+  sus4: 'major',
+  maj7: 'major',
+  m7: 'dorian',
+  '7sus4': 'mixolydian',
+};
+
+/** Notes of the scale starting on the root, without the repeated octave note. */
+export function scaleNotes(root: RootName, scale: ScaleId): SpelledPitch[] {
+  return SCALES[scale].map(([steps, number]) => spellInterval(root, steps, number));
 }
 
 export function chordNotes(root: RootName, type: ChordType): SpelledNote[] {

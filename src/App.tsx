@@ -3,6 +3,7 @@ import { Explanation } from './components/Explanation';
 import { ConsentDialog } from './components/ConsentDialog';
 import { Fretboard } from './components/Fretboard';
 import { Segmented } from './components/Segmented';
+import { ScaleStrip } from './components/ScaleStrip';
 import { SettingsDialog } from './components/SettingsDialog';
 import { DEGREE_COLORS } from './degreeColors';
 import { getConsent } from './analytics';
@@ -117,6 +118,8 @@ export function App() {
               ))}
             </div>
           </div>
+
+          <ScaleStrip root={root} type={type} chord={notes} t={t} />
         </div>
 
         <div className="stage">
