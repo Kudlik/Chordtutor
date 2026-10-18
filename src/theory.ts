@@ -117,18 +117,31 @@ export function spellDegree(root: RootName, degree: DegreeId): SpelledNote {
   return { ...spellInterval(root, steps, number), degree };
 }
 
-export type ScaleId = 'major' | 'naturalMinor' | 'dorian' | 'mixolydian' | 'locrian' | 'wholeTone' | 'diminished';
+export type ScaleId =
+  | 'major' | 'naturalMinor' | 'dorian' | 'phrygian' | 'lydian' | 'mixolydian' | 'locrian'
+  | 'harmonicMinor' | 'melodicMinor' | 'majorPentatonic' | 'minorPentatonic' | 'blues'
+  | 'lydianDominant' | 'wholeTone' | 'diminished' | 'diminishedHalfWhole';
 
 /** Scale intervals as [semitones above the root, letter number]. */
 const SCALES: Record<ScaleId, [number, number][]> = {
   major: [[0, 1], [2, 2], [4, 3], [5, 4], [7, 5], [9, 6], [11, 7]],
   naturalMinor: [[0, 1], [2, 2], [3, 3], [5, 4], [7, 5], [8, 6], [10, 7]],
   dorian: [[0, 1], [2, 2], [3, 3], [5, 4], [7, 5], [9, 6], [10, 7]],
+  phrygian: [[0, 1], [1, 2], [3, 3], [5, 4], [7, 5], [8, 6], [10, 7]],
+  lydian: [[0, 1], [2, 2], [4, 3], [6, 4], [7, 5], [9, 6], [11, 7]],
   mixolydian: [[0, 1], [2, 2], [4, 3], [5, 4], [7, 5], [9, 6], [10, 7]],
   locrian: [[0, 1], [1, 2], [3, 3], [5, 4], [6, 5], [8, 6], [10, 7]],
+  harmonicMinor: [[0, 1], [2, 2], [3, 3], [5, 4], [7, 5], [8, 6], [11, 7]],
+  melodicMinor: [[0, 1], [2, 2], [3, 3], [5, 4], [7, 5], [9, 6], [11, 7]],
+  majorPentatonic: [[0, 1], [2, 2], [4, 3], [7, 5], [9, 6]],
+  minorPentatonic: [[0, 1], [3, 3], [5, 4], [7, 5], [10, 7]],
+  blues: [[0, 1], [3, 3], [5, 4], [6, 5], [7, 5], [10, 7]],
+  lydianDominant: [[0, 1], [2, 2], [4, 3], [6, 4], [7, 5], [9, 6], [10, 7]],
   wholeTone: [[0, 1], [2, 2], [4, 3], [6, 4], [8, 5], [10, 7]],
   // Whole-half diminished: the scale that contains dim7.
   diminished: [[0, 1], [2, 2], [3, 3], [5, 4], [6, 5], [8, 6], [9, 6], [11, 7]],
+  // Half-whole diminished: the dominant diminished scale.
+  diminishedHalfWhole: [[0, 1], [1, 2], [3, 3], [4, 3], [6, 4], [7, 5], [9, 6], [10, 7]],
 };
 
 /** The scale shown for each chord type: the one the chord is built from. */
@@ -146,6 +159,14 @@ export const SCALE_OF: Record<ChordType, ScaleId> = {
   m7: 'dorian',
   '7sus4': 'mixolydian',
 };
+
+/** Scales that contain every note of the chord type, the default scale first. */
+export function matchingScales(type: ChordType): ScaleId[] {
+  const chordSteps = CHORD_FORMULAS[type].map((d) => DEGREES[d].steps);
+  const fits = (id: ScaleId) => chordSteps.every((st) => SCALES[id].some(([steps]) => steps === st));
+  const first = SCALE_OF[type];
+  return [first, ...(Object.keys(SCALES) as ScaleId[]).filter((id) => id !== first && fits(id))];
+}
 
 /** Notes of the scale starting on the root, without the repeated octave note. */
 export function scaleNotes(root: RootName, scale: ScaleId): SpelledPitch[] {

@@ -158,3 +158,8 @@ footer { display: flex; justify-content: center; padding: 0 32px 24px; }
 .scale-note.chord-tone { font-weight: 700; box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--outline); }
 .scale-hint { margin: 0; font-size: 12px; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.check { display: flex; align-items: center; gap: 12px; min-height: 44px; font-weight: 500; cursor: pointer; }
+.check input { width: 24px; height: 24px; accent-color: var(--primary); flex: none; }
+.other-scales { display: flex; flex-direction: column; gap: 16px; }
+.other-scale { display: flex; flex-direction: column; gap: 6px; }
+.scale-name { font-weight: 500; }

@@ -81,3 +81,60 @@ Feature: The scale behind the chord
     Given I open the app on a phone with a viewport width of 375 px
     When I select the chord "C" "dim7"
     Then all nine notes of the scale are visible without horizontal page scrolling
+
+  @US-1110
+  Scenario: Other matching scales are hidden by default
+    When I select the chord "A" "Minor"
+    Then I see a switch "Show other matching scales" below the scale
+    And it is off
+    And only the scale "A Natural minor scale" is shown
+
+  @US-1111
+  Scenario: Turning the switch on lists every scale that holds the chord
+    Given "A" "Minor" is selected
+    When I turn on "Show other matching scales"
+    Then below the main scale I see the scales "A Dorian", "A Phrygian", "A Harmonic minor", "A Melodic minor", "A Minor pentatonic", "A Blues" and "A Diminished (half-whole)"
+    And each scale is shown with its notes, starting and ending on the root
+    And the notes "A", "C" and "E" are highlighted in every scale
+
+  @US-1112
+  Scenario Outline: Only scales that contain every note of the chord are listed
+    Given the chord "<root>" "<type>" is selected
+    When I turn on "Show other matching scales"
+    Then every listed scale contains all the notes of the chord
+    And the scales "<expected>" are among them
+    And the scale "<excluded>" is not listed
+
+    Examples:
+      | root | type  | expected                                     | excluded      |
+      | C    | Major | Lydian, Mixolydian, Major pentatonic         | Natural minor |
+      | C    | 7     | Lydian dominant, Diminished (half-whole)     | Major         |
+      | C    | aug   | Whole-tone                                   | Dorian        |
+      | C    | dim7  | Diminished (half-whole)                      | Mixolydian    |
+
+  @US-1113
+  Scenario: The default scale stays first and is not repeated
+    When I turn on "Show other matching scales"
+    Then the main scale remains the first one shown, above the switch
+    And it does not appear again in the list of other scales
+
+  @US-1114
+  Scenario: The choice follows the chord
+    Given "Show other matching scales" is on
+    When I select another root or chord variant
+    Then the list is updated for the new chord
+    And the switch stays on
+
+  @US-1115
+  Scenario: The switch and the extra scales are available in Polish
+    Given the interface is in Polish
+    When I select the chord "A" "Minor"
+    Then the switch reads "Pokaż inne pasujące skale"
+    And the extra scales are named, for example, "Skala dorycka" and "Pentatonika molowa"
+
+  @US-1116
+  Scenario: The switch is operable from the keyboard
+    When I focus the switch with the Tab key
+    Then the focus is clearly visible
+    And Space turns it on or off
+    And the touch target is at least 44 px high

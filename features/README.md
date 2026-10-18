@@ -14,7 +14,7 @@ Each `.feature` file is one epic. Each `@US-xxx` tag is one user story. Every sc
 | 08-chord-explanation | Written explanation per chord type |
 | 09-analytics-consent | GA4 behind a consent modal |
 | 10-accessibility-quality | Accessibility, performance, theory tests |
-| 11-scale-display | The scale behind the chord, shown under the variants |
+| 11-scale-display | The scale behind the chord, and a switch for other matching scales |
 
 ## Reference: chord formulas
 
@@ -37,7 +37,7 @@ Each `.feature` file is one epic. Each `@US-xxx` tag is one user story. Every sc
 
 ## Decisions taken
 
-- Under the variants the app shows the scale each chord is built from (US-1101 to US-1109): Major, sus2, sus4, maj7 and 5 use the major scale; Minor the natural minor; 7 and 7sus4 Mixolydian; m7 Dorian; dim Locrian; dim7 the whole-half diminished scale; aug the whole-tone scale.
+- Under the variants the app shows the scale each chord is built from (US-1101 to US-1109), with a "Show other matching scales" switch that lists every scale or mode containing the chord's notes (US-1110 to US-1116): Major, sus2, sus4, maj7 and 5 use the major scale; Minor the natural minor; 7 and 7sus4 Mixolydian; m7 Dorian; dim Locrian; dim7 the whole-half diminished scale; aug the whole-tone scale.
 - The "Triad only" toggle was dropped after the MVP build (the former epic 07, US-703 to US-708, is removed). The fretboard and legend always show every note of the chord.
 - The theme can be set to System, Light or Dark in the settings (US-1008, US-1012, US-1013).
 - The settings show links to the author's Spotify and LinkedIn pages (US-108).

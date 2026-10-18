@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CHORD_FORMULAS, DEGREES, SCALE_OF, scaleNotes, CHORD_TYPES, ROOT_NAMES, chordNotes, rootPitchClass, spellDegree, stepsOf, type ChordType, type RootName } from './theory';
+import { CHORD_FORMULAS, DEGREES, SCALE_OF, matchingScales, scaleNotes, CHORD_TYPES, ROOT_NAMES, chordNotes, rootPitchClass, spellDegree, stepsOf, type ChordType, type RootName } from './theory';
 import raw from './data/chord_voicings.md?raw';
 
 const names = (r: RootName, t: ChordType) => chordNotes(r, t).map((n) => n.name).join(',');
@@ -92,5 +92,33 @@ describe('scales shown under the variants', () => {
         notes.forEach((n) => expect(n.name).toMatch(/^[A-G](#|b)?$/));
       }
     }
+  });
+
+  it('lists the default scale first, then every other scale that holds the chord', () => {
+    for (const t of CHORD_TYPES) {
+      const list = matchingScales(t);
+      expect(list[0], t).toBe(SCALE_OF[t]);
+      expect(new Set(list).size).toBe(list.length);
+      for (const id of list) {
+        const pcs = new Set(scaleNotes('C', id).map((n) => n.pc));
+        for (const c of chordNotes('C', t)) expect(pcs.has(c.pc), `${t} in ${id}`).toBe(true);
+      }
+    }
+  });
+
+  it('finds the expected alternatives', () => {
+    expect(matchingScales('Major')).toEqual(expect.arrayContaining(['major', 'lydian', 'mixolydian', 'majorPentatonic']));
+    expect(matchingScales('Minor')).toEqual(expect.arrayContaining(['naturalMinor', 'dorian', 'phrygian', 'minorPentatonic', 'blues']));
+    expect(matchingScales('7')).toEqual(expect.arrayContaining(['mixolydian', 'lydianDominant', 'diminishedHalfWhole']));
+    expect(matchingScales('Major')).not.toContain('naturalMinor');
+    expect(matchingScales('aug')).toContain('wholeTone');
+  });
+
+  it('spells the extra scales', () => {
+    expect(scaleNotes('C', 'blues').map((n) => n.name).join(' ')).toBe('C Eb F Gb G Bb');
+    expect(scaleNotes('A', 'minorPentatonic').map((n) => n.name).join(' ')).toBe('A C D E G');
+    expect(scaleNotes('C', 'harmonicMinor').map((n) => n.name).join(' ')).toBe('C D Eb F G Ab B');
+    expect(scaleNotes('C', 'lydian').map((n) => n.name).join(' ')).toBe('C D E F# G A B');
+    expect(scaleNotes('C', 'diminishedHalfWhole').map((n) => n.name).join(' ')).toBe('C Db Eb E F# G A Bb');
   });
 });
