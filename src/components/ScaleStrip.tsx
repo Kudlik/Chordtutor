@@ -19,7 +19,7 @@ function ScaleRow({ root, scale, chord, spelling, t, labelId }: { root: RootName
   const shown = [...notes, notes[0]];
   const byPc = new Map(chord.map((n) => [n.pc, n]));
   return (
-    <ol className="scale" aria-labelledby={labelId} style={{ gridTemplateColumns: `repeat(${shown.length}, minmax(0, 1fr))` }}>
+    <ol className="scale" aria-labelledby={labelId}>
       {shown.map((n, i) => {
         const tone = byPc.get(n.pc);
         const col = tone ? DEGREE_COLORS[tone.degree] : undefined;

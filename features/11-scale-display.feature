@@ -87,8 +87,9 @@ Feature: The scale behind the chord
     Given I open the app on a phone with a viewport width of 375 px
     When I select the chord "C" "dim7"
     Then all nine notes of the scale are visible without horizontal page scrolling
-    And the notes are on one row, stretched to the full width of the controls
-    And every note has the same width and none is cut off, also names like "F##"
+    And the notes are on one row, spread evenly over the full width of the controls
+    And every note stays a circle of the same size, only the space between the notes changes
+    And no note is cut off, also names like "F##"
 
   @US-1110
   Scenario: Other matching scales are hidden by default
