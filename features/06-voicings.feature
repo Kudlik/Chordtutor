@@ -91,7 +91,8 @@ Feature: Voicings for each instrument
 
   @US-613
   Scenario Outline: Ukulele power chords without a four-string shape are generated
-    Given the instrument is "Ukulele"
+    Given I am on the "Power chords" tab
+    And the instrument is "Ukulele"
     When I select the chord "<root>" "5"
     Then a voicing is shown on two adjacent strings with the other strings muted
     And its notes are exactly the root and the fifth

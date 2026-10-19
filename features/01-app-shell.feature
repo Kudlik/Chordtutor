@@ -10,7 +10,7 @@ Feature: App shell, access and platforms
   @US-101
   Scenario: Using the app requires no signup
     When I open the app for the first time
-    Then I see the Chord Explorer without any login, registration or paywall
+    Then I see the "Full chords" tab without any login, registration or paywall
     And no account is created for me
 
   @US-102
@@ -41,14 +41,33 @@ Feature: App shell, access and platforms
   Scenario: The app works offline after the first visit
     Given I have opened the app once while online
     When I open the app again with no network connection
-    Then the Chord Explorer loads
+    Then the "Full chords" tab loads
     And all chords, voicings and explanations are available
 
   @US-106
-  Scenario: Navigation is ready for additional tabs
+  Scenario: The main navigation has three tabs
     When I look at the main navigation
-    Then I see "Chord Explorer" as the only tab
+    Then I see the tabs "Full chords", "Power chords" and "Chord inversions", in that order
+    And the open tab is highlighted
     And the navigation is built so further tabs can be added later
+
+  @US-110
+  Scenario: Switching tabs keeps the root, the instrument and the settings
+    Given I selected the root "G" and the instrument "Ukulele" on the "Full chords" tab
+    When I open the "Chord inversions" tab
+    Then the root is still "G" and the instrument is still "Ukulele"
+    And left-handed mode, note names, theme and language are unchanged
+
+  @US-111
+  Scenario: The tab is part of the address
+    When I open the "Power chords" tab
+    Then the page address contains the tab, the chord and the instrument
+    And opening that address on another device shows the same tab and chord
+
+  @US-112
+  Scenario: The navigation fits on a phone
+    Given I open the app on a phone with a viewport width of 375 px
+    Then all three tabs are visible on one row below the title, without scrolling
 
   @US-107
   Scenario: The footer links to the privacy settings

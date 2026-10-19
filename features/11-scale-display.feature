@@ -5,7 +5,7 @@ Feature: The scale behind the chord
   So that I learn the scale together with the chord
 
   Background:
-    Given I am on the Chord Explorer
+    Given I am on the "Full chords" tab
 
   @US-1101
   Scenario: The scale is shown below the variants

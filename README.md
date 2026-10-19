@@ -6,6 +6,7 @@ It is made for beginners and self-taught musicians who play guitar, bass or ukul
 
 ## What it does (MVP)
 
+- **Three tabs**: *Full chords* (11 chord types with their scale), *Power chords* (the 5 chord) and *Chord inversions* (pick a chord, its variant and its inversion; the bass note is marked on the fretboard).
 - **Chord Explorer**: 12 roots x 12 chord types (Major, Minor, 7, 5, dim, dim7, aug, sus2, sus4, maj7, m7, 7sus4) = 144 chords.
 - **Three instruments**: guitar (6 strings), bass (4) and ukulele (4, re-entrant high G), standard tuning only, frets 0 to 15, left-handed mode.
 - **Notes and degrees on every dot**: note name large, degree small, one fixed colour per degree, root marked with a ring. Colour is never the only cue. Spelling follows the chosen root (C# Major = C#, E#, G#; Db Major = Db, F, Ab). On the first visit a modal asks whether to use **simplified** names (plain notes, for learning the basics) or **theoretically correct** ones (including double flats and sharps such as Ebb or F##); it can be changed any time in the settings.
@@ -29,6 +30,7 @@ Vite, React 19, TypeScript, vite-plugin-pwa, Vitest. No backend. Voicing data is
 |---|---|
 | `src/theory.ts` | Chord formulas, degrees, note spelling |
 | `src/voicings.ts` | Voicing dataset parser and bass position generator |
+| `src/inversions.ts` | Parser for `chord_inversions.md` and the generator of inversion positions |
 | `src/components/` | Fretboard (SVG), explanation, dialogs |
 | `src/i18n/` | English and Polish text; a missing Polish key fails the build |
 | `src/analytics.ts` | Consent-gated GA4 |

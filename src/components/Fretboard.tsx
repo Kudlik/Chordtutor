@@ -83,6 +83,8 @@ export function Fretboard({ instrument, voicing, notes, left, vertical, spelling
     return () => document.removeEventListener('pointerdown', close);
   }, []);
 
+  const isBassDot = (d: { string: number; fret: number }) => !!voicing?.bass && voicing.bass.string === d.string && voicing.bass.fret === d.fret;
+
   const dots = (voicing?.dots ?? []).flatMap((d) => {
     const note = byPc.get((tuning[d.string].pc + d.fret) % 12);
     return note ? [{ ...d, note }] : [];
@@ -104,7 +106,7 @@ export function Fretboard({ instrument, voicing, notes, left, vertical, spelling
       const here = dots.filter((d) => d.string === i).sort((a, b) => a.fret - b.fret);
       if (!here.length) return isBass ? '' : `${label}: ${t('board.muted')}`;
       const items = here.map(
-        (d) => `${d.fret === 0 ? t('board.open') : t('board.fret', { n: d.fret })}, ${d.note.name}, ${d.note.degree}${d.note.degree === '1' ? ` (${t('board.root')})` : ''}`,
+        (d) => `${d.fret === 0 ? t('board.open') : t('board.fret', { n: d.fret })}, ${d.note.name}, ${d.note.degree}${d.note.degree === '1' ? ` (${t('board.root')})` : ''}${isBassDot(d) ? `, ${t('board.bass')}` : ''}`,
       );
       return `${label}: ${items.join(' / ')}`;
     });
@@ -206,6 +208,7 @@ export function Fretboard({ instrument, voicing, notes, left, vertical, spelling
               }}
             >
               <circle cx={p.x} cy={p.y} r={r + 8} fill="transparent" />
+              {isBassDot(d) && <circle cx={p.x} cy={p.y} r={r + 10} fill="none" stroke="var(--ink)" strokeWidth={2} strokeDasharray="4 3" />}
               {d.note.degree === '1' && <circle cx={p.x} cy={p.y} r={r + 5} fill="none" stroke={col.fill} strokeWidth={2} />}
               <circle cx={p.x} cy={p.y} r={r} fill={col.fill} stroke={open ? 'var(--outline)' : 'none'} strokeWidth={1.5} />
               <text x={p.x} y={p.y + (open ? 1 : 3)} fontSize={(open ? 12 : vertical ? 14 : 16) - (d.note.name.length > 2 ? (open ? 2 : 3) : 0)} fontWeight={500} fill={col.text} pointerEvents="none">
@@ -224,25 +227,23 @@ export function Fretboard({ instrument, voicing, notes, left, vertical, spelling
           if (!d) return null;
           const open = d.fret === 0;
           const p = g.P(d.string, open ? g.openU : d.fret - 0.5);
-          const r = (open ? openR : dotR) + 6;
-          const line1 = `${d.note.degree} · ${t(`degree.${d.note.degree}` as 'degree.1')}`;
-          const line2 = d.note.respelled ? altNoteText(t, spelling, d.note.alt) : null;
-          const w = Math.max(line1.length, line2?.length ?? 0) * 6.6 + 20;
-          const h = line2 ? 44 : 28;
+          const r = (open ? openR : dotR) + (isBassDot(d) ? 12 : 6);
+          const lines = [`${d.note.degree} · ${t(`degree.${d.note.degree}` as 'degree.1')}`];
+          if (isBassDot(d)) lines.push(t('inv.bass'));
+          if (d.note.respelled) lines.push(altNoteText(t, spelling, d.note.alt));
+          const w = Math.max(...lines.map((l) => l.length)) * 6.6 + 20;
+          const h = 10 + lines.length * 17;
           const x = Math.min(Math.max(p.x - w / 2, 4), g.w - w - 4);
           const above = p.y - r - h - 4 >= 0;
           const y = above ? p.y - r - h : p.y + r + 4;
           return (
             <g pointerEvents="none" role="tooltip">
               <rect x={x} y={y} width={w} height={h} rx={8} fill="var(--ink)" />
-              <text x={x + w / 2} y={y + 18} fontSize={12} fontWeight={500} fill="var(--bg)">
-                {line1}
-              </text>
-              {line2 && (
-                <text x={x + w / 2} y={y + 35} fontSize={11} fill="var(--bg)">
-                  {line2}
+              {lines.map((line, i) => (
+                <text key={i} x={x + w / 2} y={y + 18 + i * 17} fontSize={i === 0 ? 12 : 11} fontWeight={i === 0 ? 500 : 400} fill="var(--bg)">
+                  {line}
                 </text>
-              )}
+              ))}
             </g>
           );
         })()}

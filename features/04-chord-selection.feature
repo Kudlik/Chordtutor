@@ -37,13 +37,28 @@ Feature: Choosing a chord
 
   @US-405
   Scenario: Chord types are listed as one set of variants
+    Given I am on the "Full chords" tab
     Then I see a "Variant" section below the "Root" section
-    And it contains one button each for "Major", "Minor", "7", "5", "dim", "dim7", "aug", "sus2", "sus4", "maj7", "m7" and "7sus4", in that order
+    And it contains one button each for "Major", "Minor", "7", "dim", "dim7", "aug", "sus2", "sus4", "maj7", "m7" and "7sus4", in that order
     And the buttons are not split into groups
+    And there is no button for "5", because that chord has its own tab
+
+  @US-411
+  Scenario: Power chords have their own tab
+    When I open the "Power chords" tab
+    Then the chord is the "5" chord of the selected root
+    And there is no "Variant" section, because there is only one variant
+    And the fretboard, voicings, legend and explanation are shown as for any other chord
+
+  @US-412
+  Scenario: Coming back from the Power chords tab restores the variant
+    Given "E" "7sus4" is selected on the "Full chords" tab
+    When I open the "Power chords" tab and then the "Full chords" tab again
+    Then "E" "7sus4" is selected again
 
   @US-406
   Scenario: Every combination of root and type exists
-    Given the 12 roots and the 12 chord types
+    Given the 12 roots and the 12 chord types, across the "Full chords" and "Power chords" tabs
     When I select any root with any chord type
     Then the chord title, the fretboard and the explanation are shown
     And no combination shows an empty or error state

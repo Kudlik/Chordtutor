@@ -200,6 +200,11 @@ export function stepsOf(type: ChordType): number[] {
   return CHORD_FORMULAS[type].slice(1).map((d) => DEGREES[d].steps);
 }
 
+/** Suffix of the chord symbol: C, Cm, C7, C5, Cdim, Cdim7, Caug, Csus2, Csus4, Cmaj7, Cm7, C7sus4. */
+export const SYMBOL_SUFFIX: Record<ChordType, string> = {
+  Major: '', Minor: 'm', '7': '7', '5': '5', dim: 'dim', dim7: 'dim7', aug: 'aug', sus2: 'sus2', sus4: 'sus4', maj7: 'maj7', m7: 'm7', '7sus4': '7sus4',
+};
+
 export function isBlackKey(pc: number): boolean {
   return [1, 3, 6, 8, 10].includes(pc);
 }

@@ -13,8 +13,10 @@ export interface Voicing {
   /** Strings that are not played (never set for bass). */
   muted: number[];
   barre?: { fret: number; from: number; to: number };
-  kind: 'open' | 'movable' | 'generated' | 'bass';
+  kind: 'open' | 'movable' | 'generated' | 'bass' | 'inversion';
   source: string;
+  /** The lowest-sounding note, for inversions. */
+  bass?: Dot;
 }
 
 const SOURCE = 'chord_voicings.md';
