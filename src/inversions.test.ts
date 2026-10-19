@@ -75,6 +75,8 @@ describe('inversion positions are correct and playable', () => {
             const frets = v.dots.map((d) => d.fret);
             expect(Math.max(...frets) - Math.min(...frets), label).toBeLessThanOrEqual(4);
             expect(v.muted).toHaveLength(0);
+            // One dot per chord note: a triad shows three notes, a tetrad four.
+            expect(v.dots, label).toHaveLength(inv.steps.length);
           }
         }
       }

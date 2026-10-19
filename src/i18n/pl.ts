@@ -27,7 +27,7 @@ export const pl: Record<TranslationKey, string> = {
   'inv.slashHelp': 'W zapisie z ukośnikiem {example} oznacza akord {chord} z dźwiękiem {note} w basie.',
   'inv.symmetric': 'Ten akord jest symetryczny: każdy przewrót ma te same kroki od basu, więc zawiera te same dźwięki co akordy zbudowane na innych dźwiękach.',
   'inv.positionsHint': 'Pozycje są wyliczane z przewrotu: najniższy dźwięk to bas, a wszystkie dźwięki akordu są zagrane.',
-  'inv.bassHint': 'Na gitarze basowej dźwięki akordu są pokazane w oknie pięciu progów, a najniższy z nich jest basem.',
+  'inv.bassHint': 'Na gitarze basowej każdy dźwięk akordu jest pokazany raz, blisko siebie, a najniższy z nich jest basem.',
   'board.bass': 'dźwięk basowy',
   'settings.open': 'Ustawienia',
   'settings.title': 'Ustawienia',

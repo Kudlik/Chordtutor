@@ -138,7 +138,7 @@ export function InversionsView({ state, update, t, spelling, vertical }: Props) 
           </section>
           <section>
             <h3>{t('exp.built')}</h3>
-            <dl className="built">
+            <dl className="built stacked">
               <dt>{t('inv.built')}</dt>
               <dd>{bottomToTop.map((n) => n.name).join(', ')}</dd>
               <dt>{t('inv.steps')}</dt>

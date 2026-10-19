@@ -73,6 +73,21 @@ function* product(options: number[][]): Generator<number[]> {
   yield* go(0);
 }
 
+function* productOf<T>(options: T[][]): Generator<T[]> {
+  const pick: T[] = [];
+  function* go(i: number): Generator<T[]> {
+    if (i === options.length) {
+      yield [...pick];
+      return;
+    }
+    for (const o of options[i]) {
+      pick[i] = o;
+      yield* go(i + 1);
+    }
+  }
+  yield* go(0);
+}
+
 const MAX_POSITIONS = 10;
 const spanOf = (frets: number[]) => {
   const fretted = frets.filter((f) => f > 0);
@@ -100,21 +115,39 @@ export function inversionPositions(instrument: Instrument, inversion: Inversion)
   const source = 'generated from chord_inversions.md';
 
   if (instrument === 'bass') {
-    // A bass plays one note at a time: show all chord tones in a five-fret window, the lowest of them being the bass note.
-    const out: Voicing[] = [];
-    for (let lo = 0; lo + 4 <= MAX_FRET + 4; lo++) {
-      const dots: Dot[] = [];
-      open.forEach((p, string) => {
-        for (let fret = lo; fret <= lo + 4 && fret <= MAX_FRET; fret++) if (chordPcs.has((p + fret) % 12)) dots.push({ string, fret });
+    // A bass plays one note at a time: one dot per chord note, close together, the lowest being the bass note.
+    const pitch = (d: Dot) => open[d.string] + d.fret;
+    const found: { voicing: Voicing; distinct: boolean; span: number }[] = [];
+    const seen = new Set<string>();
+    for (let lo = 0; lo <= MAX_FRET; lo++) {
+      const options = inversion.pcs.map((pc) => {
+        const dots: Dot[] = [];
+        open.forEach((p, string) => {
+          for (let fret = lo; fret <= Math.min(lo + 4, MAX_FRET); fret++) if ((p + fret) % 12 === pc) dots.push({ string, fret });
+        });
+        return dots;
       });
-      if (new Set(dots.map((d) => (open[d.string] + d.fret) % 12)).size < chordPcs.size) continue;
-      const pitch = (d: Dot) => open[d.string] + d.fret;
-      const bass = dots.reduce((a, b) => (pitch(b) < pitch(a) ? b : a));
-      if (pitch(bass) % 12 !== inversion.bassPc) continue;
-      if (dots.every((d) => d.fret > lo)) continue; // the window must start on a used fret, so shapes are not repeated
-      out.push({ dots, muted: [], kind: 'inversion', source, bass });
+      if (options.some((o) => o.length === 0)) continue;
+      for (const dots of productOf(options)) {
+        const bass = dots[0]; // the first note of an inversion is its bass
+        if (dots.slice(1).some((d) => pitch(d) <= pitch(bass))) continue;
+        if (!dots.some((d) => d.fret === lo)) continue; // the window starts on a used fret, so shapes are not repeated
+        const id = dots.map((d) => `${d.string}:${d.fret}`).sort().join(',');
+        if (seen.has(id)) continue;
+        seen.add(id);
+        const frets = dots.map((d) => d.fret);
+        found.push({
+          voicing: { dots, muted: [], kind: 'inversion', source, bass },
+          distinct: new Set(dots.map((d) => d.string)).size === dots.length,
+          span: Math.max(...frets) - Math.min(...frets),
+        });
+      }
     }
-    return out.slice(0, MAX_POSITIONS);
+    // Shapes with each note on its own string first, then the lowest on the neck.
+    return found
+      .sort((x, y) => Number(y.distinct) - Number(x.distinct) || lowestFret(x.voicing) - lowestFret(y.voicing) || x.span - y.span)
+      .map((f) => f.voicing)
+      .slice(0, MAX_POSITIONS);
   }
 
   // Guitar and ukulele: a block of adjacent strings is played, the rest muted.

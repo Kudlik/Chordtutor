@@ -24,7 +24,7 @@ export const en = {
   'inv.slashHelp': 'In slash notation, {example} means {chord} with {note} in the bass.',
   'inv.symmetric': 'This chord is symmetric: every inversion has the same steps from the bass, so it contains the same notes as chords built on other notes.',
   'inv.positionsHint': 'Positions are generated from the inversion: the lowest note is the bass note and every note of the chord is played.',
-  'inv.bassHint': 'On bass guitar the chord notes are shown in a five-fret window, with the lowest one as the bass note.',
+  'inv.bassHint': 'On bass guitar each note of the chord is shown once, close together, with the lowest one as the bass note.',
   'board.bass': 'bass note',
   'settings.open': 'Settings',
   'settings.title': 'Settings',

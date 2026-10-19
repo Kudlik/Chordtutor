@@ -129,6 +129,7 @@ Feature: Chord inversions
     When a chord has several positions
     Then I see numbered position buttons
     And positions without doubled notes come first, then the lowest on the neck
+    And on bass, positions with every note on its own string come first
     And at most ten positions are offered
     And the first position is selected
 
@@ -139,13 +140,21 @@ Feature: Chord inversions
     And the notes and the bass marker still describe the selected inversion
 
   @US-1315
-  Scenario: Bass shows the chord tones in a five-fret window
+  Scenario Outline: Bass shows exactly one dot per chord note
     Given the instrument is "Bass"
-    When I select the chord "C" "Major" and the inversion "1st inversion"
-    Then every position shows the chord tones within five frets
-    And the lowest of them is "E", the bass note
+    When I select the chord "<root>" "<type>" and the inversion "<inversion>"
+    Then every position shows exactly <count> dots, one for each note of the chord
+    And the lowest of them is the bass note of the inversion
+    And the dots lie within five frets
     And no muted-string markers are shown
-    And a hint explains that the lowest note is the bass note
+    And a hint explains that each note is shown once and the lowest one is the bass note
+
+    Examples:
+      | root | type  | inversion     | count |
+      | C    | Major | 1st inversion | 3     |
+      | A    | Minor | 2nd inversion | 3     |
+      | G    | 7     | 3rd inversion | 4     |
+      | A    | 5     | 1st inversion | 2     |
 
   @US-1316
   Scenario: Selecting a chord or inversion keeps the choices
