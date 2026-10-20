@@ -13,24 +13,43 @@ interface Props {
   t: TFunction;
 }
 
+/** A whole step is 2 frets, a half step 1 fret, an augmented second 3 frets. */
+function stepLabel(step: number, t: TFunction): string {
+  if (step === 1) return t('scale.step.half');
+  if (step === 2) return t('scale.step.whole');
+  return step % 2 === 0 ? String(step / 2) : `${Math.floor(step / 2)}½`;
+}
+
 function ScaleRow({ root, scale, chord, spelling, t, labelId }: { root: RootName; scale: ScaleId; chord: SpelledNote[]; spelling: Spelling; t: TFunction; labelId: string }) {
   const notes = scaleChips(root, scale, chord, spelling);
   // Repeat the root an octave higher, so the scale reads D E F# G A B C# D.
-  const shown = [...notes, notes[0]];
+  const shown = [...notes, { ...notes[0], interval: '8', step: 0 }];
   return (
     <ol className="scale" aria-labelledby={labelId}>
       {shown.map((n, i) => {
         const tone = n.tone;
         const col = tone ? DEGREE_COLORS[tone.degree] : undefined;
+        const last = i === shown.length - 1;
         return (
-          <li
-            key={i}
-            className={tone ? 'scale-note chord-tone' : 'scale-note'}
-            style={col ? { background: col.fill, color: col.text } : undefined}
-            title={n.respelled ? altNoteText(t, spelling, n.alt) : undefined}
-          >
-            {n.name}
-            {tone && <span className="sr-only"> ({t('scale.chordTone')})</span>}
+          <li key={i} className="scale-cell">
+            <span
+              className={tone ? 'scale-note chord-tone' : 'scale-note'}
+              style={col ? { background: col.fill, color: col.text } : undefined}
+              title={n.respelled ? altNoteText(t, spelling, n.alt) : undefined}
+            >
+              {n.name}
+              {tone && <span className="sr-only"> ({t('scale.chordTone')})</span>}
+            </span>
+            <span className="scale-interval">
+              <span className="sr-only">{t('scale.interval')} </span>
+              {n.interval}
+            </span>
+            {!last && (
+              <span className="scale-step">
+                <span className="sr-only">{t('scale.stepTo')} </span>
+                {stepLabel(n.step, t)}
+              </span>
+            )}
           </li>
         );
       })}
@@ -53,6 +72,7 @@ export function ScaleStrip({ root, type, chord, spelling, t }: Props) {
       </div>
       <ScaleRow root={root} scale={main} chord={chord} spelling={spelling} t={t} labelId="scale-label" />
       <p className="muted scale-hint">{t('scale.hint')}</p>
+      <p className="muted scale-hint">{t('scale.intervalsHint')}</p>
 
       {others.length > 0 && (
         <label className="check">

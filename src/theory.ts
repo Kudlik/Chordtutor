@@ -180,15 +180,30 @@ export function scaleNotes(root: RootName, scale: ScaleId, spelling: Spelling = 
 export interface ScaleChip extends SpelledPitch {
   /** The chord note this scale note is, when it is one. */
   tone?: SpelledNote;
+  /** Interval from the root as a degree: 1, 2, b3, #4, 5, b7... */
+  interval: string;
+  /** Semitones from this note to the next one (the last note goes up to the octave). */
+  step: number;
+}
+
+const MAJOR_STEPS: Record<number, number> = { 1: 0, 2: 2, 3: 4, 4: 5, 5: 7, 6: 9, 7: 11 };
+
+/** The interval of a scale note from the root, written like the chord degrees. */
+function intervalLabel(steps: number, number: number): string {
+  const diff = steps - MAJOR_STEPS[number];
+  return (diff < 0 ? 'b'.repeat(-diff) : '#'.repeat(diff)) + number;
 }
 
 /** Scale notes for display. A scale note that is also a chord note takes the chord's spelling,
  *  so the scale and the fretboard always agree (e.g. C dim7 shows Bbb, not A, in its scale). */
 export function scaleChips(root: RootName, scale: ScaleId, chord: SpelledNote[], spelling: Spelling): ScaleChip[] {
   const byPc = new Map(chord.map((n) => [n.pc, n]));
-  return scaleNotes(root, scale, spelling).map((n) => {
+  const def = SCALES[scale];
+  return scaleNotes(root, scale, spelling).map((n, i) => {
+    const interval = intervalLabel(def[i][0], def[i][1]);
+    const step = (i + 1 < def.length ? def[i + 1][0] : 12) - def[i][0];
     const tone = byPc.get(n.pc);
-    return tone ? { pc: n.pc, name: tone.name, alt: tone.alt, respelled: tone.respelled, tone } : n;
+    return tone ? { pc: n.pc, name: tone.name, alt: tone.alt, respelled: tone.respelled, tone, interval, step } : { ...n, interval, step };
   });
 }
 
