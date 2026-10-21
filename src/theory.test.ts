@@ -164,4 +164,21 @@ describe('scales shown under the variants', () => {
       }
     }
   });
+
+  it('gives every scale note its interval from the root', () => {
+    const chips = (r: RootName, id: Parameters<typeof scaleNotes>[1]) => scaleChips(r, id, [], 'correct');
+    const iv = (id: Parameters<typeof scaleNotes>[1]) => chips('C', id).map((c) => c.interval).join(' ');
+    expect(iv('major')).toBe('1 2 3 4 5 6 7');
+    expect(iv('naturalMinor')).toBe('1 2 b3 4 5 b6 b7');
+    expect(iv('mixolydian')).toBe('1 2 3 4 5 6 b7');
+    expect(iv('lydian')).toBe('1 2 3 #4 5 6 7');
+    expect(iv('phrygian')).toBe('1 b2 b3 4 5 b6 b7');
+    expect(iv('locrian')).toBe('1 b2 b3 4 b5 b6 b7');
+    expect(iv('blues')).toBe('1 b3 4 b5 5 b7');
+    // The intervals of every scale start on the root.
+    for (const id of ['major', 'naturalMinor', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'locrian', 'harmonicMinor', 'melodicMinor', 'majorPentatonic', 'minorPentatonic', 'blues', 'lydianDominant', 'wholeTone', 'diminished', 'diminishedHalfWhole'] as const) {
+      const c = chips('D', id);
+      expect(c[0].interval).toBe('1');
+    }
+  });
 });

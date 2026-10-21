@@ -153,7 +153,6 @@ footer { display: flex; justify-content: center; padding: 0 32px 24px; }
 .fretboard [data-dot]:focus-visible circle:nth-of-type(1) { stroke: var(--primary); stroke-width: 3; }
 .fretboard { touch-action: manipulation; }
 
-.scale { list-style: none; margin: 0; padding: 0; display: flex; justify-content: space-between; gap: 6px; }
 .scale-note { flex: none; width: 32px; height: 32px; padding: 0; font-size: 13px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 500; background: var(--surface-var); color: var(--ink-variant); }
 .scale-note.chord-tone { font-weight: 700; box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--outline); }
 .scale-hint { margin: 0; font-size: 12px; }
@@ -169,3 +168,11 @@ footer { display: flex; justify-content: center; padding: 0 32px 24px; }
 .spelling-option:hover, .spelling-option:focus-visible { border-color: var(--primary); background: var(--surface-var); }
 .spelling-option-title { font-size: 16px; font-weight: 500; color: var(--primary); }
 .dialog h2:focus { outline: none; }
+.scale-wrap { position: relative; }
+.scale { list-style: none; margin: 0; padding: 0; display: flex; justify-content: space-between; }
+.scale-cell { display: block; }
+.scale-note { cursor: pointer; }
+.scale-note:focus-visible { outline: 3px solid var(--primary); outline-offset: 3px; }
+.scale-tip { position: absolute; bottom: calc(100% + 10px); z-index: 5; width: max-content; max-width: 100%; padding: 6px 12px; border-radius: 8px; background: var(--ink); color: var(--bg); pointer-events: none; }
+.scale-tip-main { font-size: 12px; font-weight: 500; line-height: 17px; }
+.scale-tip-extra { font-size: 11px; line-height: 17px; }

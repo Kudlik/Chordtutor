@@ -184,3 +184,73 @@ Feature: The scale behind the chord
     And any instrument, language and note-name setting
     Then the chord notes line, the legend, the fretboard dots, the "Example in" text and every highlighted scale note use the same names
     # Verified by an automated test and by a scripted check of the running app
+
+  @US-1121
+  Scenario: Hovering a scale note shows its interval
+    Given I use a mouse
+    When I select the chord "D" "Major" and hover over the scale note "F#"
+    Then a tooltip shows "3 · Major third"
+    And the tooltip disappears when the pointer leaves the note
+
+  @US-1122
+  Scenario: Tapping a scale note shows its interval on touch screens
+    Given I use a touch screen
+    When I tap a scale note
+    Then the tooltip with its interval is shown
+    When I tap the same note again or tap outside the scale
+    Then the tooltip is closed
+    And tapping another note moves the tooltip to that note
+
+  @US-1123
+  Scenario: The tooltip is available from the keyboard
+    When I focus a scale note with the Tab key
+    Then the tooltip is shown
+    And pressing Enter or Space keeps it open until I press Escape
+    And a screen reader announces the note, its interval and whether it is a chord note
+
+  @US-1124
+  Scenario Outline: The tooltip names the interval from the root
+    Given the scale is "<scale>" on the root "C"
+    When I look at the tooltip of the note "<note>"
+    Then it reads "<tooltip>"
+
+    Examples:
+      | scale         | note | tooltip                |
+      | Major         | C    | 1 · Root               |
+      | Major         | D    | 2 · Major second       |
+      | Natural minor | Eb   | b3 · Minor third       |
+      | Natural minor | Ab   | b6 · Minor sixth       |
+      | Lydian        | F#   | #4 · Augmented fourth  |
+      | Phrygian      | Db   | b2 · Minor second      |
+      | Dorian        | A    | 6 · Major sixth        |
+      | Mixolydian    | Bb   | b7 · Minor seventh     |
+      | Major         | C (octave) | 8 · Octave       |
+
+  @US-1125
+  Scenario: A chord note whose chord degree differs from its scale interval says so
+    Given the note names are set to "Theoretically correct"
+    When I select the chord "C" "dim7" and open the tooltip of the scale note "Bbb"
+    Then it reads "6 · Major sixth"
+    And it adds "Chord note: bb7 · Diminished seventh"
+    And it adds "Sounds like A"
+
+  @US-1126
+  Scenario: The tooltip stays inside the screen
+    Given I open the app on a phone with a viewport width of 375 px
+    When I open the tooltip of the first or the last scale note
+    Then the tooltip is fully visible and causes no horizontal scrolling
+
+  @US-1127
+  Scenario: The tooltips work for the other matching scales and in Polish
+    Given the note names are set to "Theoretically correct"
+    When I turn on "Show other matching scales"
+    Then every listed scale shows the same tooltips
+    Given the interface is in Polish
+    Then the tooltip of "F#" in "D Major" reads "3 · Tercja wielka"
+
+  @US-1128
+  Scenario: The intervals of every scale start on the root
+    Given any scale offered by the app
+    Then its first interval is "1"
+    And the intervals match the scale formula, for example "1 2 b3 4 5 b6 b7" for natural minor
+    # Verified by an automated test
