@@ -185,10 +185,14 @@ footer { display: flex; justify-content: center; padding: 0 32px 24px; }
 .built.stacked dt { font-size: 12px; margin-top: 8px; }
 .built.stacked dd { font-size: 14px; }
 
-.scale { list-style: none; margin: 0; padding: 0; display: flex; }
-.scale-cell { flex: 1 1 0; min-width: 0; display: grid; grid-template-columns: 32px minmax(0, 1fr); grid-template-rows: 32px auto; row-gap: 4px; }
-.scale-cell:last-child { flex: none; grid-template-columns: 32px; }
 .scale-note { width: 32px; height: 32px; padding: 0; font-size: 13px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 500; background: var(--surface-var); color: var(--ink-variant); }
 .scale-note.chord-tone { font-weight: 700; box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--outline); }
-.scale-interval { grid-column: 1; grid-row: 2; justify-self: center; font-size: 11px; line-height: 14px; color: var(--ink-variant); white-space: nowrap; }
-.scale-step { grid-column: 2; grid-row: 2; justify-self: center; font-size: 11px; line-height: 14px; font-style: italic; color: var(--ink-variant); white-space: nowrap; }
+
+.scale-wrap { position: relative; }
+.scale { list-style: none; margin: 0; padding: 0; display: flex; justify-content: space-between; }
+.scale-cell { display: block; }
+.scale-note { cursor: pointer; }
+.scale-note:focus-visible { outline: 3px solid var(--primary); outline-offset: 3px; }
+.scale-tip { position: absolute; bottom: calc(100% + 10px); z-index: 5; width: max-content; max-width: 100%; padding: 6px 12px; border-radius: 8px; background: var(--ink); color: var(--bg); pointer-events: none; }
+.scale-tip-main { font-size: 12px; font-weight: 500; line-height: 17px; }
+.scale-tip-extra { font-size: 11px; line-height: 17px; }

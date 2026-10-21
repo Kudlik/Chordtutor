@@ -186,68 +186,71 @@ Feature: The scale behind the chord
     # Verified by an automated test and by a scripted check of the running app
 
   @US-1121
-  Scenario: Every scale note shows its interval from the root
-    When I select the chord "D" "Major"
-    Then below the notes I see the intervals "1", "2", "3", "4", "5", "6", "7" and "8"
-    And the final "8" belongs to the root repeated an octave higher
+  Scenario: Hovering a scale note shows its interval
+    Given I use a mouse
+    When I select the chord "D" "Major" and hover over the scale note "F#"
+    Then a tooltip shows "3 · Major third"
+    And the tooltip disappears when the pointer leaves the note
 
   @US-1122
-  Scenario: The step between neighbouring notes is shown
-    When I select the chord "D" "Major"
-    Then between the notes I see the steps "W", "W", "H", "W", "W", "W" and "H"
-    And a whole step "W" is 2 frets, a half step "H" is 1 fret
-    And a hint under the scale explains the intervals and the steps
+  Scenario: Tapping a scale note shows its interval on touch screens
+    Given I use a touch screen
+    When I tap a scale note
+    Then the tooltip with its interval is shown
+    When I tap the same note again or tap outside the scale
+    Then the tooltip is closed
+    And tapping another note moves the tooltip to that note
 
   @US-1123
-  Scenario Outline: Intervals and steps for each kind of scale
-    Given the scale is "<scale>" on the root "C"
-    Then the intervals are <intervals>
-    And the steps are <steps>
-
-    Examples:
-      | scale               | intervals            | steps               |
-      | Major               | 1 2 3 4 5 6 7        | W W H W W W H      |
-      | Natural minor       | 1 2 b3 4 5 b6 b7    | W H W W H W W      |
-      | Dorian              | 1 2 b3 4 5 6 b7      | W H W W W H W      |
-      | Mixolydian          | 1 2 3 4 5 6 b7       | W W H W W H W      |
-      | Lydian              | 1 2 3 #4 5 6 7       | W W W H W W H      |
-      | Phrygian            | 1 b2 b3 4 5 b6 b7   | H W W W H W W      |
-      | Locrian             | 1 b2 b3 4 b5 b6 b7  | H W W H W W W      |
-      | Harmonic minor      | 1 2 b3 4 5 b6 7     | W H W W H 1½ H     |
-      | Major pentatonic    | 1 2 3 5 6            | W W 1½ W 1½        |
-      | Blues               | 1 b3 4 b5 5 b7       | 1½ W H H 1½ W      |
-      | Whole-tone          | 1 2 3 #4 #5 b7       | W W W W W W        |
-      | Diminished (W-H)    | 1 2 b3 4 b5 b6 6 7   | W H W H W H W H    |
+  Scenario: The tooltip is available from the keyboard
+    When I focus a scale note with the Tab key
+    Then the tooltip is shown
+    And pressing Enter or Space keeps it open until I press Escape
+    And a screen reader announces the note, its interval and whether it is a chord note
 
   @US-1124
-  Scenario: The steps of every scale add up to an octave
-    Given any scale offered by the app
-    Then its steps add up to 12 semitones
-    And its first interval is "1"
-    # Verified by an automated test
+  Scenario Outline: The tooltip names the interval from the root
+    Given the scale is "<scale>" on the root "C"
+    When I look at the tooltip of the note "<note>"
+    Then it reads "<tooltip>"
+
+    Examples:
+      | scale         | note | tooltip                |
+      | Major         | C    | 1 · Root               |
+      | Major         | D    | 2 · Major second       |
+      | Natural minor | Eb   | b3 · Minor third       |
+      | Natural minor | Ab   | b6 · Minor sixth       |
+      | Lydian        | F#   | #4 · Augmented fourth  |
+      | Phrygian      | Db   | b2 · Minor second      |
+      | Dorian        | A    | 6 · Major sixth        |
+      | Mixolydian    | Bb   | b7 · Minor seventh     |
+      | Major         | C (octave) | 8 · Octave       |
 
   @US-1125
-  Scenario: Intervals are shown for the other matching scales too
+  Scenario: A chord note whose chord degree differs from its scale interval says so
     Given the note names are set to "Theoretically correct"
-    When I turn on "Show other matching scales"
-    Then every listed scale shows its intervals and steps in the same way
+    When I select the chord "C" "dim7" and open the tooltip of the scale note "Bbb"
+    Then it reads "6 · Major sixth"
+    And it adds "Chord note: bb7 · Diminished seventh"
+    And it adds "Sounds like A"
 
   @US-1126
-  Scenario: Screen readers get the intervals and steps
-    Given a screen reader is in use
-    When I read the scale
-    Then each note is announced with its interval from the root
-    And each step is announced as the step to the next note
+  Scenario: The tooltip stays inside the screen
+    Given I open the app on a phone with a viewport width of 375 px
+    When I open the tooltip of the first or the last scale note
+    Then the tooltip is fully visible and causes no horizontal scrolling
 
   @US-1127
-  Scenario: The intervals and steps are available in Polish
+  Scenario: The tooltips work for the other matching scales and in Polish
+    Given the note names are set to "Theoretically correct"
+    When I turn on "Show other matching scales"
+    Then every listed scale shows the same tooltips
     Given the interface is in Polish
-    Then a whole step is labelled "C" and a half step "P"
-    And the hint under the scale is in Polish
+    Then the tooltip of "F#" in "D Major" reads "3 · Tercja wielka"
 
   @US-1128
-  Scenario: The intervals fit under the notes on a phone
-    Given I open the app on a phone with a viewport width of 375 px
-    When I select the chord "C" "dim7"
-    Then all nine notes with their intervals and steps are visible without horizontal scrolling
-    And the labels do not overlap
+  Scenario: The intervals of every scale start on the root
+    Given any scale offered by the app
+    Then its first interval is "1"
+    And the intervals match the scale formula, for example "1 2 b3 4 5 b6 b7" for natural minor
+    # Verified by an automated test

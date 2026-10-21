@@ -182,8 +182,6 @@ export interface ScaleChip extends SpelledPitch {
   tone?: SpelledNote;
   /** Interval from the root as a degree: 1, 2, b3, #4, 5, b7... */
   interval: string;
-  /** Semitones from this note to the next one (the last note goes up to the octave). */
-  step: number;
 }
 
 const MAJOR_STEPS: Record<number, number> = { 1: 0, 2: 2, 3: 4, 4: 5, 5: 7, 6: 9, 7: 11 };
@@ -201,9 +199,8 @@ export function scaleChips(root: RootName, scale: ScaleId, chord: SpelledNote[],
   const def = SCALES[scale];
   return scaleNotes(root, scale, spelling).map((n, i) => {
     const interval = intervalLabel(def[i][0], def[i][1]);
-    const step = (i + 1 < def.length ? def[i + 1][0] : 12) - def[i][0];
     const tone = byPc.get(n.pc);
-    return tone ? { pc: n.pc, name: tone.name, alt: tone.alt, respelled: tone.respelled, tone, interval, step } : { ...n, interval, step };
+    return tone ? { pc: n.pc, name: tone.name, alt: tone.alt, respelled: tone.respelled, tone, interval } : { ...n, interval };
   });
 }
 
